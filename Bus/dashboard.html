@@ -491,93 +491,111 @@
     }
 
     // Load bookings from localStorage - SIMPLIFIED AND GUARANTEED TO WORK
-    function loadBookings() {
-        console.log('📂 Loading bookings from localStorage...');
-        
-        // Get current user
-        const currentUser = JSON.parse(localStorage.getItem('ea_user')) || { email: 'guest' };
-        const userEmail = currentUser.email || 'guest';
-        
-        console.log('👤 Current user email:', userEmail);
-        
-        // Get ALL bookings from localStorage
-        let allBookings = [];
-        
-        // Check ea_bookings (main storage)
-        const eaBookingsStr = localStorage.getItem('ea_bookings');
-        console.log('📦 ea_bookings string length:', eaBookingsStr ? eaBookingsStr.length : 0);
-        
-        if (eaBookingsStr) {
-            try {
-                const bookings = JSON.parse(eaBookingsStr);
-                console.log('✅ Parsed ea_bookings:', bookings);
-                
-                if (Array.isArray(bookings)) {
-                    allBookings = allBookings.concat(bookings);
-                    console.log(`📋 Added ${bookings.length} bookings from ea_bookings`);
-                } else if (bookings && typeof bookings === 'object') {
-                    // If it's a single booking object, convert to array
-                    allBookings.push(bookings);
-                    console.log('📋 Added single booking object from ea_bookings');
-                }
-            } catch (e) {
-                console.error('❌ Error parsing ea_bookings:', e);
-            }
-        }
-        
-        // Check userBookings
-        const userBookingsStr = localStorage.getItem('userBookings');
-        console.log('📦 userBookings string length:', userBookingsStr ? userBookingsStr.length : 0);
-        
-        if (userBookingsStr) {
-            try {
-                const bookings = JSON.parse(userBookingsStr);
-                console.log('✅ Parsed userBookings:', bookings);
-                
-                if (Array.isArray(bookings)) {
-                    allBookings = allBookings.concat(bookings);
-                    console.log(`📋 Added ${bookings.length} bookings from userBookings`);
-                } else if (bookings && typeof bookings === 'object') {
-                    allBookings.push(bookings);
-                    console.log('📋 Added single booking object from userBookings');
-                }
-            } catch (e) {
-                console.error('❌ Error parsing userBookings:', e);
-            }
-        }
-        
-        console.log(`📊 Total raw bookings collected: ${allBookings.length}`);
-        
-        // Process each booking - SIMPLE AND DIRECT
-        const processedBookings = allBookings.map((booking, index) => {
-            console.log(`Processing booking ${index}:`, booking);
+  function loadBookings() {
+    console.log('📂 Loading bookings from localStorage...');
+    
+    // Get current logged-in user
+    const currentUser = JSON.parse(localStorage.getItem('ea_user')) || { email: 'guest' };
+    const userEmail = currentUser.email || 'guest';
+    
+    console.log('👤 Current user email:', userEmail);
+    
+    // Get ALL bookings from localStorage
+    let allBookings = [];
+    
+    // Check ea_bookings (main storage)
+    const eaBookingsStr = localStorage.getItem('ea_bookings');
+    console.log('📦 ea_bookings string length:', eaBookingsStr ? eaBookingsStr.length : 0);
+    
+    if (eaBookingsStr) {
+        try {
+            const bookings = JSON.parse(eaBookingsStr);
+            console.log('✅ Parsed ea_bookings:', bookings);
             
-            // Create a simple, guaranteed booking object
-            const simpleBooking = {
-                id: booking.id || booking.bookingId || `BOOKING-${Date.now()}-${index}`,
-                from: booking.from || 'Kampala',
-                to: booking.to || 'Unknown Destination',
-                date: booking.date || new Date().toISOString().split('T')[0],
-                time: booking.time || '08:00 AM',
-                company: booking.company || 'EA Coach',
-                seats: Array.isArray(booking.seats) ? booking.seats : 
-                      (typeof booking.seats === 'string' ? booking.seats.split(',') : ['N/A']),
-                amount: parseFloat(booking.amount || booking.totalAmount || booking.total || booking.price || 0),
-                status: booking.status || 'upcoming',
-                passengerName: booking.passengerName || booking.fullName || 'Guest',
-                phone: booking.phone || 'Not provided'
-            };
-            
-            console.log(`Processed booking ${index}:`, simpleBooking);
-            return simpleBooking;
-        });
-        
-        // Store ALL bookings (don't filter by user for now to debug)
-        dashboardState.bookings = processedBookings;
-        
-        console.log('🎯 Dashboard state bookings:', dashboardState.bookings);
-        console.log(`✅ Loaded ${dashboardState.bookings.length} bookings into dashboard`);
+            if (Array.isArray(bookings)) {
+                allBookings = allBookings.concat(bookings);
+                console.log(`📋 Added ${bookings.length} bookings from ea_bookings`);
+            } else if (bookings && typeof bookings === 'object') {
+                // If it's a single booking object, convert to array
+                allBookings.push(bookings);
+                console.log('📋 Added single booking object from ea_bookings');
+            }
+        } catch (e) {
+            console.error('❌ Error parsing ea_bookings:', e);
+        }
     }
+    
+    // Check userBookings
+    const userBookingsStr = localStorage.getItem('userBookings');
+    console.log('📦 userBookings string length:', userBookingsStr ? userBookingsStr.length : 0);
+    
+    if (userBookingsStr) {
+        try {
+            const bookings = JSON.parse(userBookingsStr);
+            console.log('✅ Parsed userBookings:', bookings);
+            
+            if (Array.isArray(bookings)) {
+                allBookings = allBookings.concat(bookings);
+                console.log(`📋 Added ${bookings.length} bookings from userBookings`);
+            } else if (bookings && typeof bookings === 'object') {
+                allBookings.push(bookings);
+                console.log('📋 Added single booking object from userBookings');
+            }
+        } catch (e) {
+            console.error('❌ Error parsing userBookings:', e);
+        }
+    }
+    
+    console.log(`📊 Total raw bookings collected: ${allBookings.length}`);
+    
+    // FILTER: Only get bookings for the current user
+    const userBookings = allBookings.filter(booking => {
+        // Check various email fields that might exist in booking objects
+        const bookingUserEmail = booking.userEmail || 
+                               booking.email || 
+                               booking.passengerEmail || 
+                               booking.passenger?.email;
+        
+        console.log(`Checking booking: ${booking.id} - User email in booking: ${bookingUserEmail} - Current user: ${userEmail}`);
+        
+        // Return true if booking belongs to current user
+        return bookingUserEmail === userEmail;
+    });
+    
+    console.log(`👤 Bookings for user ${userEmail}: ${userBookings.length}`);
+    
+    // Process each booking
+    const processedBookings = userBookings.map((booking, index) => {
+        console.log(`Processing booking ${index} for user:`, booking);
+        
+        // Create a normalized booking object
+        const normalizedBooking = {
+            id: booking.id || booking.bookingId || `BOOKING-${Date.now()}-${index}`,
+            from: booking.from || booking.departure || 'Kampala',
+            to: booking.to || booking.destination || 'Unknown Destination',
+            date: booking.date || booking.travelDate || booking.departureDate || new Date().toISOString().split('T')[0],
+            time: booking.time || booking.departureTime || '08:00 AM',
+            company: booking.company || booking.busCompany || 'EA Coach',
+            seats: Array.isArray(booking.seats) ? booking.seats : 
+                  (typeof booking.seats === 'string' ? booking.seats.split(',').map(s => s.trim()) : ['N/A']),
+            amount: parseFloat(booking.amount || booking.totalAmount || booking.total || booking.price || 0),
+            status: booking.status || 'upcoming',
+            passengerName: booking.passengerName || booking.fullName || 'Not provided',
+            phone: booking.phone || booking.phoneNumber || 'Not provided',
+            email: booking.email || booking.userEmail || booking.passengerEmail || userEmail,
+            userEmail: booking.userEmail || booking.email || booking.passengerEmail || userEmail
+        };
+        
+        console.log(`Processed booking ${index}:`, normalizedBooking);
+        return normalizedBooking;
+    });
+    
+    // Store only user's bookings
+    dashboardState.bookings = processedBookings;
+    
+    console.log('🎯 Dashboard state bookings:', dashboardState.bookings);
+    console.log(`✅ Loaded ${dashboardState.bookings.length} bookings for user ${userEmail}`);
+}
 
     // Determine booking status based on date
     function getBookingStatus(bookingDate) {
@@ -637,60 +655,77 @@
     }
 
     // Render upcoming bookings - FORCE DISPLAY
-    function renderUpcomingBookings() {
-        console.log('🔄 Rendering upcoming bookings...');
-        
-        const container = document.getElementById('upcomingBookingsContainer');
-        const noBookingsDiv = document.getElementById('noUpcomingBookings');
-        
-        if (!container) {
-            console.error('❌ Container not found!');
-            return;
-        }
-        
-        console.log('Total bookings to render:', dashboardState.bookings.length);
-        
-        // Get today's date
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        // Get ALL bookings as upcoming for now (for testing)
-        const upcomingBookings = dashboardState.bookings.slice(0, 5);
-        
-        console.log('Upcoming bookings to display:', upcomingBookings.length);
-        
-        if (upcomingBookings.length === 0) {
-            console.log('No bookings to display');
-            if (noBookingsDiv) {
-                noBookingsDiv.classList.remove('hidden');
-                container.innerHTML = '';
-                container.appendChild(noBookingsDiv);
-            }
-            return;
-        }
-        
-        // Hide no bookings message
-        if (noBookingsDiv) {
-            noBookingsDiv.classList.add('hidden');
-        }
-        
-        // Clear container
-        container.innerHTML = '';
-        
-        // Render each booking
-        upcomingBookings.forEach((booking, index) => {
-            console.log(`Creating card for booking ${index}:`, booking);
-            try {
-                const bookingCard = createBookingCard(booking);
-                container.appendChild(bookingCard);
-            } catch (e) {
-                console.error(`Error creating card for booking ${index}:`, e);
-            }
-        });
-        
-        // Refresh icons
-        feather.replace();
+   function renderUpcomingBookings() {
+    console.log('🔄 Rendering upcoming bookings...');
+    
+    const container = document.getElementById('upcomingBookingsContainer');
+    const noBookingsDiv = document.getElementById('noUpcomingBookings');
+    
+    if (!container) {
+        console.error('❌ Container not found!');
+        return;
     }
+    
+    console.log('Total bookings to filter:', dashboardState.bookings.length);
+    
+    // Get today's date
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Filter upcoming bookings (today or future, not cancelled)
+    const upcomingBookings = dashboardState.bookings.filter(booking => {
+        // Skip cancelled bookings
+        if (booking.status === 'cancelled') return false;
+        
+        try {
+            if (!booking.date) return false;
+            
+            const travelDate = new Date(booking.date);
+            travelDate.setHours(0, 0, 0, 0);
+            return travelDate >= today;
+        } catch (e) {
+            console.error('Error parsing booking date:', booking.date, e);
+            return false;
+        }
+    }).sort((a, b) => {
+        // Sort by date ascending (earliest first)
+        return new Date(a.date) - new Date(b.date);
+    }).slice(0, 5); // Show only first 5 upcoming bookings
+    
+    console.log('Upcoming bookings to display:', upcomingBookings.length);
+    
+    if (upcomingBookings.length === 0) {
+        console.log('No upcoming bookings found');
+        if (noBookingsDiv) {
+            noBookingsDiv.classList.remove('hidden');
+            container.innerHTML = '';
+            container.appendChild(noBookingsDiv);
+        }
+        return;
+    }
+    
+    // Hide no bookings message
+    if (noBookingsDiv) {
+        noBookingsDiv.classList.add('hidden');
+    }
+    
+    // Clear container
+    container.innerHTML = '';
+    
+    // Render each booking
+    upcomingBookings.forEach((booking, index) => {
+        console.log(`Creating card for booking ${index}:`, booking);
+        try {
+            const bookingCard = createBookingCard(booking);
+            container.appendChild(bookingCard);
+        } catch (e) {
+            console.error(`Error creating card for booking ${index}:`, e);
+        }
+    });
+    
+    // Refresh icons
+    feather.replace();
+}
 
     // Create booking card element - SIMPLIFIED TEMPLATE
     function createBookingCard(booking) {
@@ -995,7 +1030,7 @@
                   `Seats: ${Array.isArray(booking.seats) ? booking.seats.join(', ') : booking.seats}\n` +
                   `Amount: UGX ${(booking.amount || 0).toLocaleString()}\n` +
                   `Status: ${booking.status}\n` +
-                  `Passenger: ${booking.passengerName}\n` +
+                  `Passenger: ${booking.fullName}\n` +
                   `Phone: ${booking.phone}`);
         }
     }
@@ -1104,72 +1139,6 @@
             }
         });
     }
-
-    // Add debug button
-    document.addEventListener('DOMContentLoaded', function() {
-        // Add CSS to force visibility
-        const style = document.createElement('style');
-        style.textContent = `
-            #upcomingBookingsContainer > div {
-                display: block !important;
-                opacity: 1 !important;
-                visibility: visible !important;
-            }
-            
-            #bookingHistoryBody tr {
-                display: table-row !important;
-                opacity: 1 !important;
-                visibility: visible !important;
-            }
-            
-            .debug-btn {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background: #dc2626;
-                color: white;
-                padding: 10px 15px;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 500;
-                cursor: pointer;
-                z-index: 9999;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            }
-            
-            .debug-btn:hover {
-                background: #b91c1c;
-            }
-        `;
-        document.head.appendChild(style);
-        
-        // Add debug button
-        const debugBtn = document.createElement('button');
-        debugBtn.className = 'debug-btn';
-        debugBtn.innerHTML = '🔍 DEBUG';
-        debugBtn.onclick = function() {
-            console.log('=== DEBUG INFO ===');
-            console.log('User:', JSON.parse(localStorage.getItem('ea_user') || '{}'));
-            
-            const eaBookings = JSON.parse(localStorage.getItem('ea_bookings') || '[]');
-            console.log('ea_bookings:', eaBookings);
-            console.log('ea_bookings length:', eaBookings.length);
-            
-            const userBookings = JSON.parse(localStorage.getItem('userBookings') || '[]');
-            console.log('userBookings:', userBookings);
-            console.log('userBookings length:', userBookings.length);
-            
-            console.log('dashboardState.bookings:', dashboardState.bookings);
-            console.log('dashboardState.bookings length:', dashboardState.bookings.length);
-            
-            // Force refresh display
-            renderUpcomingBookings();
-            renderBookingHistory();
-            
-            alert(`DEBUG INFO\n\nBookings in storage: ${eaBookings.length + userBookings.length}\nBookings in dashboard: ${dashboardState.bookings.length}\nCheck console for details.`);
-        };
-        document.body.appendChild(debugBtn);
-    });
 </script>
 </body>
 </html>
