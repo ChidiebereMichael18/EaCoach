@@ -11,18 +11,37 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { primary: '#2563eb', secondary: '#f59e0b' } } } };
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        primary: '#2563eb', 
+                        secondary: '#f59e0b',
+                        success: '#10b981',
+                        danger: '#ef4444'
+                    } 
+                } 
+            } 
+        };
     </script>
-    <script defer src="script.js"></script>
-    <script defer src="components/footer.js"></script>
-    <script>document.addEventListener('DOMContentLoaded', () => { feather.replace(); });</script>
+    <style>
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        .error-input {
+            border-color: #ef4444;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
     <nav class="bg-white shadow">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
                 <a href="index.html" class="flex items-center space-x-2">
-                    <img src="/icons8-bus-100.png" alt="" srcset="">
+                    <img src="/icons8-bus-100.png" alt="EA Coach Logo">
                     <span class="text-xl font-bold text-primary">EA Coach</span>
                 </a>
                 <div class="hidden md:flex items-center space-x-6">
@@ -36,24 +55,209 @@
 
     <main class="container mx-auto px-4 py-12">
         <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow">
-            <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-bold">Login to Your Account</h1>
+                <p class="text-gray-600 mt-2">Access your bookings and manage your trips</p>
+            </div>
+            
+            <!-- Error Message -->
+            <div id="errorMessage" class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 hidden">
+                <div class="flex items-center">
+                    <i data-feather="alert-circle" class="w-5 h-5 mr-2"></i>
+                    <span id="errorText"></span>
+                </div>
+            </div>
+            
             <form id="loginForm" class="space-y-4">
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="loginEmail">Email</label>
-                    <input id="loginEmail" type="email" class="w-full p-3 border rounded-lg" required>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="loginEmail">
+                        Email Address
+                    </label>
+                    <input id="loginEmail" type="email" 
+                           class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" 
+                           placeholder="you@example.com"
+                           required>
+                    <div id="emailError" class="error-message"></div>
                 </div>
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="loginPassword">Password</label>
-                    <input id="loginPassword" type="password" class="w-full p-3 border rounded-lg" required>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="loginPassword">
+                        Password
+                    </label>
+                    <input id="loginPassword" type="password" 
+                           class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary" 
+                           placeholder="Enter your password"
+                           required>
+                    <div id="passwordError" class="error-message"></div>
                 </div>
-                <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700">Login</button>
+                
+                <button type="submit" 
+                        id="loginButton"
+                        class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 transition duration-300 font-medium">
+                    Login
+                </button>
             </form>
-            <p class="text-center text-gray-600 mt-4">New here? <a href="signup.html" class="text-primary">Create an account</a></p>
+            
+            <div class="mt-6 pt-6 border-t">
+                <p class="text-center text-gray-600">
+                    New to EA Coach? 
+                    <a href="signup.html" class="text-primary font-medium hover:text-blue-700">Create an account</a>
+                </p>
+            </div>
         </div>
     </main>
 
     <custom-footer></custom-footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+            setupLoginForm();
+        });
+        
+        // Setup login form
+        function setupLoginForm() {
+            const loginForm = document.getElementById('loginForm');
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Reset errors
+                clearErrors();
+                errorMessage.classList.add('hidden');
+                
+                // Get form values
+                const email = document.getElementById('loginEmail').value.trim();
+                const password = document.getElementById('loginPassword').value.trim();
+                
+                // Validate inputs
+                if (!validateInputs(email, password)) {
+                    return;
+                }
+                
+                // Check credentials
+                const loginSuccess = authenticateUser(email, password);
+                
+                if (loginSuccess) {
+                    // Save user session
+                    saveUserSession(email);
+                    
+                    // Redirect to dashboard immediately
+                    window.location.href = 'dashboard.html';
+                    
+                } else {
+                    // Show error
+                    showError('Invalid email or password. Please try again.');
+                }
+            });
+        }
+        
+        // Validate all inputs
+        function validateInputs(email, password) {
+            let isValid = true;
+            
+            if (!email) {
+                document.getElementById('emailError').textContent = 'Email is required';
+                document.getElementById('emailError').style.display = 'block';
+                document.getElementById('loginEmail').classList.add('error-input');
+                isValid = false;
+            } else if (!isValidEmail(email)) {
+                document.getElementById('emailError').textContent = 'Please enter a valid email address';
+                document.getElementById('emailError').style.display = 'block';
+                document.getElementById('loginEmail').classList.add('error-input');
+                isValid = false;
+            }
+            
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Password is required';
+                document.getElementById('passwordError').style.display = 'block';
+                document.getElementById('loginPassword').classList.add('error-input');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+        
+        // Clear all errors
+        function clearErrors() {
+            // Clear error messages
+            document.getElementById('emailError').style.display = 'none';
+            document.getElementById('passwordError').style.display = 'none';
+            
+            // Remove error styles
+            document.getElementById('loginEmail').classList.remove('error-input');
+            document.getElementById('loginPassword').classList.remove('error-input');
+            
+            // Hide main error message
+            document.getElementById('errorMessage').classList.add('hidden');
+        }
+        
+        // Show error message
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+            
+            // Log error to console
+            console.error('Login Error:', message);
+        }
+        
+        // Validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+        
+        // Authenticate user
+        function authenticateUser(email, password) {
+            console.log('Attempting authentication for:', email);
+            
+            // Check localStorage for user data
+            const userKey = `ea_user_${email}`;
+            const userData = JSON.parse(localStorage.getItem(userKey));
+            
+            if (!userData) {
+                console.log('No user found with email:', email);
+                return false;
+            }
+            
+            if (userData.password !== password) {
+                console.log('Password mismatch for user:', email);
+                return false;
+            }
+            
+            console.log('Authentication successful for:', email);
+            return true;
+        }
+        
+        // Save user session
+        function saveUserSession(email) {
+            const userData = {
+                email: email,
+                name: email.split('@')[0],
+                loginTime: new Date().toISOString()
+            };
+            
+            // Save to localStorage
+            localStorage.setItem('ea_user', JSON.stringify(userData));
+            
+            console.log('User session saved:', userData);
+        }
+        
+        // Test login function
+        window.testLogin = function(email = 'test@example.com', password = 'password123') {
+            console.log('Testing login with:', email);
+            
+            // Fill form
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPassword').value = password;
+            
+            // Submit form
+            document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+        };
+    </script>
 </body>
 </html>
-
-

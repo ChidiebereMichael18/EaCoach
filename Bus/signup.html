@@ -11,53 +11,360 @@
     <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <script>
-        tailwind.config = { theme: { extend: { colors: { primary: '#2563eb', secondary: '#f59e0b' } } } };
+        tailwind.config = { 
+            theme: { 
+                extend: { 
+                    colors: { 
+                        primary: '#2563eb', 
+                        secondary: '#f59e0b' 
+                    } 
+                } 
+            } 
+        };
     </script>
-    <script defer src="script.js"></script>
-    <script defer src="components/footer.js"></script>
-    <script>document.addEventListener('DOMContentLoaded', () => { feather.replace(); });</script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => { 
+            feather.replace(); 
+            initSignupForm();
+        });
+    </script>
+    <style>
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        .error-input {
+            border-color: #ef4444;
+        }
+    </style>
 </head>
 <body class="bg-gray-50">
+    <!-- Updated Navigation with Mobile Menu -->
     <nav class="bg-white shadow">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
                 <a href="index.html" class="flex items-center space-x-2">
-                    <img src="/icons8-bus-100.png" alt="" srcset="">
                     <span class="text-xl font-bold text-primary">EA Coach</span>
                 </a>
+
+                <!-- Desktop Navigation -->
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="routes.html" class="text-gray-600 hover:text-primary transition">Routes</a>
                     <a href="login.html" class="text-gray-600 hover:text-primary transition">Login</a>
+                    <a href="signup.html" class="text-primary font-semibold">Sign Up</a>
                     <a href="booking.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Book Now</a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-gray-600 hover:text-primary focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu (hidden by default) -->
+            <div id="mobile-menu" class="md:hidden hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1">
+                    <a href="routes.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Routes</a>
+                    <a href="login.html" class="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-gray-50 rounded-md">Login</a>
+                    <a href="signup.html" class="block px-3 py-2 text-primary font-semibold bg-blue-50 rounded-md">Sign Up</a>
+                    <a href="booking.html" class="block px-3 py-2 bg-primary text-white rounded-md hover:bg-blue-700 text-center mt-2">Book Now</a>
                 </div>
             </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 py-12">
-        <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow">
-            <h1 class="text-2xl font-bold mb-6 text-center">Create an Account</h1>
-            <form id="signupForm" class="space-y-4">
+    <main class="container mx-auto px-4 py-8 md:py-12">
+        <div class="max-w-md mx-auto bg-white p-6 md:p-8 rounded-xl shadow">
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-bold text-gray-900">Create an Account</h1>
+                <p class="text-gray-600 mt-2">Join EA Coach to book your trips</p>
+            </div>
+            
+            <form id="signupForm" class="space-y-5">
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="signupEmail">Email</label>
-                    <input id="signupEmail" type="email" class="w-full p-3 border rounded-lg" required>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="signupEmail">
+                        Email Address *
+                    </label>
+                    <input 
+                        id="signupEmail" 
+                        type="email" 
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" 
+                        placeholder="your@email.com"
+                        required
+                    >
+                    <div id="emailError" class="error-message">Please enter a valid email address</div>
                 </div>
+                
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="signupPassword">Password</label>
-                    <input id="signupPassword" type="password" class="w-full p-3 border rounded-lg" required>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="signupPassword">
+                        Password *
+                    </label>
+                    <input 
+                        id="signupPassword" 
+                        type="password" 
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" 
+                        placeholder="••••••••"
+                        minlength="6"
+                        required
+                    >
+                    <div id="passwordError" class="error-message">Password must be at least 6 characters</div>
                 </div>
+                
                 <div>
-                    <label class="block text-gray-700 text-sm font-bold mb-2" for="signupPassword2">Confirm Password</label>
-                    <input id="signupPassword2" type="password" class="w-full p-3 border rounded-lg" required>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="signupPassword2">
+                        Confirm Password *
+                    </label>
+                    <input 
+                        id="signupPassword2" 
+                        type="password" 
+                        class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary" 
+                        placeholder="••••••••"
+                        required
+                    >
+                    <div id="passwordMatchError" class="error-message">Passwords do not match</div>
                 </div>
-                <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700">Sign Up</button>
+                
+                <div class="pt-2">
+                    <button 
+                        type="submit" 
+                        class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700 font-semibold transition duration-300"
+                        id="signupButton"
+                    >
+                        Create Account
+                    </button>
+                </div>
+                
+                <div class="text-center text-sm text-gray-500 mt-4">
+                    By signing up, you agree to our 
+                    <a href="#" class="text-primary hover:underline">Terms of Service</a> and 
+                    <a href="#" class="text-primary hover:underline">Privacy Policy</a>
+                </div>
             </form>
-            <p class="text-center text-gray-600 mt-4">Already have an account? <a href="login.html" class="text-primary">Login</a></p>
+            
+            <div class="mt-6 pt-6 border-t">
+                <p class="text-center text-gray-600">
+                    Already have an account? 
+                    <a href="login.html" class="text-primary font-semibold hover:underline">Login here</a>
+                </p>
+            </div>
         </div>
     </main>
 
+    <!-- Footer Component -->
     <custom-footer></custom-footer>
+
+    <script>
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const menuIcon = document.getElementById('menu-icon');
+            
+            if (mobileMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    // Toggle mobile menu
+                    mobileMenu.classList.toggle('hidden');
+                    
+                    // Change icon between hamburger and X
+                    if (mobileMenu.classList.contains('hidden')) {
+                        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                    } else {
+                        menuIcon.setAttribute('d', 'M6 18L18 6M6 6l12 12');
+                    }
+                });
+                
+                // Close mobile menu when clicking outside
+                document.addEventListener('click', function(event) {
+                    if (!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+                        mobileMenu.classList.add('hidden');
+                        menuIcon.setAttribute('d', 'M4 6h16M4 12h16M4 18h16');
+                    }
+                });
+            }
+        });
+
+        // Signup form functionality
+        function initSignupForm() {
+            const signupForm = document.getElementById('signupForm');
+            const emailInput = document.getElementById('signupEmail');
+            const passwordInput = document.getElementById('signupPassword');
+            const password2Input = document.getElementById('signupPassword2');
+            const signupButton = document.getElementById('signupButton');
+            
+            // Error elements
+            const emailError = document.getElementById('emailError');
+            const passwordError = document.getElementById('passwordError');
+            const passwordMatchError = document.getElementById('passwordMatchError');
+            
+            // Real-time validation
+            emailInput.addEventListener('input', function() {
+                const email = this.value.trim();
+                const isValid = validateEmail(email);
+                
+                if (email && !isValid) {
+                    showError(emailInput, emailError, 'Please enter a valid email address');
+                } else {
+                    clearError(emailInput, emailError);
+                }
+            });
+            
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                
+                if (password.length > 0 && password.length < 6) {
+                    showError(passwordInput, passwordError, 'Password must be at least 6 characters');
+                } else {
+                    clearError(passwordInput, passwordError);
+                    // Check password match if both fields have values
+                    if (password2Input.value) {
+                        validatePasswordMatch();
+                    }
+                }
+            });
+            
+            password2Input.addEventListener('input', validatePasswordMatch);
+            
+            function validatePasswordMatch() {
+                const password = passwordInput.value;
+                const password2 = password2Input.value;
+                
+                if (password2 && password !== password2) {
+                    showError(password2Input, passwordMatchError, 'Passwords do not match');
+                } else {
+                    clearError(password2Input, passwordMatchError);
+                }
+            }
+            
+            // Form submission
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+                const password2 = password2Input.value;
+                
+                // Reset errors
+                clearError(emailInput, emailError);
+                clearError(passwordInput, passwordError);
+                clearError(password2Input, passwordMatchError);
+                
+                // Validate
+                let isValid = true;
+                
+                // Validate email
+                if (!email) {
+                    showError(emailInput, emailError, 'Email is required');
+                    isValid = false;
+                } else if (!validateEmail(email)) {
+                    showError(emailInput, emailError, 'Please enter a valid email address');
+                    isValid = false;
+                }
+                
+                // Validate password
+                if (!password) {
+                    showError(passwordInput, passwordError, 'Password is required');
+                    isValid = false;
+                } else if (password.length < 6) {
+                    showError(passwordInput, passwordError, 'Password must be at least 6 characters');
+                    isValid = false;
+                }
+                
+                // Validate password match
+                if (!password2) {
+                    showError(password2Input, passwordMatchError, 'Please confirm your password');
+                    isValid = false;
+                } else if (password !== password2) {
+                    showError(password2Input, passwordMatchError, 'Passwords do not match');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    // Scroll to first error
+                    const firstError = document.querySelector('.error-input');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        firstError.focus();
+                    }
+                    return;
+                }
+                
+                // Change button text to show processing
+                const originalText = signupButton.textContent;
+                signupButton.textContent = 'Creating Account...';
+                signupButton.disabled = true;
+                
+                // Simulate API call with timeout
+                setTimeout(() => {
+                    try {
+                        // Check if user already exists
+                        const existingUser = localStorage.getItem(`ea_user_${email}`);
+                        
+                        if (existingUser) {
+                            // User already exists
+                            alert('An account with this email already exists. Please login instead.');
+                            signupButton.textContent = originalText;
+                            signupButton.disabled = false;
+                            return;
+                        }
+                        
+                        // Create user object
+                        const user = {
+                            email: email,
+                            password: password,
+                            name: email.split('@')[0], // Use email prefix as default name
+                            createdAt: new Date().toISOString()
+                        };
+                        
+                        // Save user to localStorage
+                        localStorage.setItem(`ea_user_${email}`, JSON.stringify(user));
+                        
+                        // Also save to ea_user for current session
+                        localStorage.setItem('ea_user', JSON.stringify({
+                            email: email,
+                            name: user.name
+                        }));
+                        
+                        // Show success message
+                        alert('Account created successfully! Redirecting to dashboard...');
+                        
+                        // Redirect to dashboard
+                        window.location.href = 'dashboard.html';
+                        
+                    } catch (error) {
+                        console.error('Signup error:', error);
+                        alert('An error occurred. Please try again.');
+                        signupButton.textContent = originalText;
+                        signupButton.disabled = false;
+                    }
+                }, 1000);
+            });
+            
+            // Helper functions
+            function validateEmail(email) {
+                const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return re.test(email);
+            }
+            
+            function showError(input, errorElement, message) {
+                input.classList.add('error-input');
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+            }
+            
+            function clearError(input, errorElement) {
+                input.classList.remove('error-input');
+                errorElement.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
-
-

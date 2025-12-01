@@ -681,15 +681,140 @@ let passengerData = null;
 function handleBookingSummary() {
     const continueBtn = document.getElementById("continueToPassengerBtn");
     if (continueBtn) {
-        continueBtn.addEventListener("click", () => {
+        continueBtn.addEventListener("click", (e) => {
+            e.preventDefault(); // Prevent any default behavior
+            
             if (!appState.user) {
-                openAuthModal("login");
+                // Use a promise-based approach to handle auth
+                handleAuthForBooking().then((isAuthenticated) => {
+                    if (isAuthenticated) {
+                        setHidden("bookingSummary", true);
+                        displayPassengerForm();
+                    }
+                }).catch(() => {
+                    // User cancelled auth or auth failed
+                    console.log("Authentication cancelled or failed");
+                });
                 return;
             }
             setHidden("bookingSummary", true);
             displayPassengerForm();
         });
     }
+}
+
+
+// New function to handle auth for booking
+function handleAuthForBooking() {
+    return new Promise((resolve, reject) => {
+        const modal = document.getElementById("authModal");
+        const title = document.getElementById("authTitle");
+        const submitBtn = document.getElementById("authSubmitBtn");
+        const toggleBtn = document.getElementById("toggleAuthMode");
+        const closeBtn = document.getElementById("authCloseBtn");
+        
+        // Set to login mode
+        modal.setAttribute("data-mode", "login");
+        title.textContent = "Login to Continue Booking";
+        submitBtn.textContent = "Login";
+        toggleBtn.textContent = "Create an account";
+        
+        // Show modal
+        modal.classList.remove("hidden");
+        modal.classList.add("flex");
+        
+        // Create a cleanup function
+        const cleanup = () => {
+            modal.removeEventListener("click", handleOutsideClick);
+            closeBtn.removeEventListener("click", handleClose);
+            document.removeEventListener("keydown", handleEsc);
+            authForm.removeEventListener("submit", handleSubmit);
+        };
+        
+        // Handle outside click
+        const handleOutsideClick = (e) => {
+            if (e.target === modal) {
+                cleanup();
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+                reject(new Error("Modal closed by clicking outside"));
+            }
+        };
+        
+        // Handle close button
+        const handleClose = () => {
+            cleanup();
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+            reject(new Error("Modal closed by close button"));
+        };
+        
+        // Handle escape key
+        const handleEsc = (e) => {
+            if (e.key === "Escape") {
+                cleanup();
+                modal.classList.add("hidden");
+                modal.classList.remove("flex");
+                reject(new Error("Modal closed by ESC key"));
+            }
+        };
+        
+        // Handle form submission
+        const handleSubmit = (e) => {
+            e.preventDefault();
+            const email = document.getElementById("authEmail").value.trim();
+            const password = document.getElementById("authPassword").value.trim();
+            
+            // Simple login check
+            const raw = localStorage.getItem(`ea_user_${email}`);
+            if (!raw) {
+                alert("Account not found. Create an account first.");
+                return;
+            }
+            
+            const user = JSON.parse(raw);
+            if (user.password !== password) {
+                alert("Invalid credentials.");
+                return;
+            }
+            
+            // Success
+            appState.user = { email };
+            saveAuth();
+            
+            // Cleanup and close modal
+            cleanup();
+            modal.classList.add("hidden");
+            modal.classList.remove("flex");
+            
+            // Clear form
+            document.getElementById("authEmail").value = "";
+            document.getElementById("authPassword").value = "";
+            
+            resolve(true);
+        };
+        
+        // Add event listeners
+        modal.addEventListener("click", handleOutsideClick);
+        closeBtn.addEventListener("click", handleClose);
+        document.addEventListener("keydown", handleEsc);
+        
+        const authForm = document.getElementById("authForm");
+        authForm.addEventListener("submit", handleSubmit);
+        
+        // Handle toggle mode
+        toggleBtn.addEventListener("click", () => {
+            const currentMode = modal.getAttribute("data-mode");
+            const newMode = currentMode === "signup" ? "login" : "signup";
+            
+            modal.setAttribute("data-mode", newMode);
+            title.textContent = newMode === "signup" ? "Create Account" : "Login";
+            submitBtn.textContent = newMode === "signup" ? "Sign Up" : "Login";
+            toggleBtn.textContent = newMode === "signup" 
+                ? "Already have an account? Login" 
+                : "Create an account";
+        });
+    });
 }
 
 function displayPassengerForm() {
@@ -1000,11 +1125,14 @@ function init() {
     handleBookingSummary();
     handlePassengerForm();
     handlePayment();
-    handleAuth();
+    
+    // Don't call handleAuth() here since we're handling it differently
+    // handleAuth(); // Remove this line
+    
     handleAdmin();
     initNavLinks();
     
-    // Check if there's a pending booking from sessionStorage (after redirect from index.html)
+    // Check if there's a pending booking from sessionStorage
     const pendingBooking = sessionStorage.getItem('pendingBooking');
     if (pendingBooking) {
         try {
@@ -1013,8 +1141,7 @@ function init() {
             appState.selectedSeats = bookingData.seats;
             sessionStorage.removeItem('pendingBooking');
             
-            // Show booking summary automatically
-            if (window.location.pathname.includes('booking.html') || window.location.pathname.endsWith('booking.html')) {
+            if (window.location.pathname.includes('booking.html')) {
                 setTimeout(() => {
                     displayBookingSummary();
                 }, 300);
@@ -1024,8 +1151,8 @@ function init() {
         }
     }
     
-    // Check for booking data from seats.html URL parameters
-    if (window.location.pathname.includes('booking.html') || window.location.pathname.endsWith('booking.html')) {
+    // Check for booking data from URL parameters
+    if (window.location.pathname.includes('booking.html')) {
         const urlParams = new URLSearchParams(window.location.search);
         const from = urlParams.get('from');
         const to = urlParams.get('to');
@@ -1039,7 +1166,6 @@ function init() {
         const arrivalTime = urlParams.get('arrivalTime');
         
         if (from && to && seatsParam) {
-            // Create trip object from URL params
             const seatNumbers = seatsParam.split(',').map(s => parseInt(s.trim())).filter(s => !isNaN(s));
             
             appState.selectedTrip = {
@@ -1055,7 +1181,6 @@ function init() {
             
             appState.selectedSeats = seatNumbers;
             
-            // Skip booking summary and go directly to passenger details
             setTimeout(() => {
                 setHidden("search-results", true);
                 setHidden("bookingSummary", true);
@@ -1063,7 +1188,8 @@ function init() {
             }, 300);
         }
     }
-    // Enhance date input: min today and clickable trigger
+    
+    // Enhance date input
     const dateInput = document.getElementById("date");
     if (dateInput) {
         const today = new Date();
@@ -1084,38 +1210,8 @@ function init() {
         }
     }
 
-    // Standalone auth pages handlers
-    const loginForm = document.getElementById("loginForm");
-    if (loginForm) {
-        loginForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const email = document.getElementById("loginEmail").value.trim();
-            const password = document.getElementById("loginPassword").value.trim();
-            const raw = localStorage.getItem(`ea_user_${email}`);
-            if (!raw) { alert("Account not found. Please sign up."); return; }
-            const user = JSON.parse(raw);
-            if (user.password !== password) { alert("Invalid credentials."); return; }
-            appState.user = { email };
-            saveAuth();
-            alert(`Welcome back, ${email}!`);
-            window.location.href = "index.html#home";
-        });
-    }
-    const signupForm = document.getElementById("signupForm");
-    if (signupForm) {
-        signupForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const email = document.getElementById("signupEmail").value.trim();
-            const password = document.getElementById("signupPassword").value.trim();
-            const password2 = document.getElementById("signupPassword2").value.trim();
-            if (password !== password2) { alert("Passwords do not match."); return; }
-            localStorage.setItem(`ea_user_${email}`, JSON.stringify({ email, password }));
-            appState.user = { email };
-            saveAuth();
-            alert(`Welcome, ${email}!`);
-            window.location.href = "index.html#home";
-        });
-    }
+    // Remove the standalone auth pages handlers since we're not using them
+    // Or keep them if you have separate login.html and signup.html pages
 }
 
 document.addEventListener("DOMContentLoaded", init);
