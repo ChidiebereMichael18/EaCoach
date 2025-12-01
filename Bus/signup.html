@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EA Coach - Sign Up</title>
+    <link rel="icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="shortcut icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        tailwind.config = { theme: { extend: { colors: { primary: '#2563eb', secondary: '#f59e0b' } } } };
+    </script>
+    <script defer src="script.js"></script>
+    <script defer src="components/footer.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', () => { feather.replace(); });</script>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <img src="/icons8-bus-100.png" alt="" srcset="">
+                    <span class="text-xl font-bold text-primary">EA Coach</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="routes.html" class="text-gray-600 hover:text-primary transition">Routes</a>
+                    <a href="login.html" class="text-gray-600 hover:text-primary transition">Login</a>
+                    <a href="booking.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-12">
+        <div class="max-w-md mx-auto bg-white p-8 rounded-xl shadow">
+            <h1 class="text-2xl font-bold mb-6 text-center">Create an Account</h1>
+            <form id="signupForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="signupEmail">Email</label>
+                    <input id="signupEmail" type="email" class="w-full p-3 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="signupPassword">Password</label>
+                    <input id="signupPassword" type="password" class="w-full p-3 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="signupPassword2">Confirm Password</label>
+                    <input id="signupPassword2" type="password" class="w-full p-3 border rounded-lg" required>
+                </div>
+                <button type="submit" class="w-full bg-primary text-white py-3 rounded-lg hover:bg-blue-700">Sign Up</button>
+            </form>
+            <p class="text-center text-gray-600 mt-4">Already have an account? <a href="login.html" class="text-primary">Login</a></p>
+        </div>
+    </main>
+
+    <custom-footer></custom-footer>
+</body>
+</html>
+
+

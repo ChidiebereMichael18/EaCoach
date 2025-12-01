@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EA Coach - Book Your Journey Across Uganda</title>
+   
+    <link rel="shortcut icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#f59e0b'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="#" class="flex items-center space-x-2">
+                   <img src="/icons8-bus-100.png" alt="" srcset="">
+                    <span class="text-xl font-bold text-primary">EA Coach</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#home" class="text-gray-600 hover:text-primary transition">Home</a>
+                    <a href="routes.html" class="text-gray-600 hover:text-primary transition">Routes</a>
+                    <a href="login.html" class="text-gray-600 hover:text-primary transition">Login</a>
+                    <a href="signup.html" class="text-gray-600 hover:text-primary transition">Sign Up</a>
+                    <a href="booking.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+<main id="home" class="container mx-auto px-4 py-8">
+        <!-- Hero Section -->
+        <section class="hero bg-gradient-to-r from-primary to-secondary rounded-xl p-8 mb-12 text-white relative overflow-hidden">
+            <div class="absolute inset-0 opacity-20">
+                <img src="http://static.photos/travel/1920x1080/bus" alt="Bus travel" class="w-full h-full object-cover">
+            </div>
+            <div class="max-w-3xl mx-auto text-center relative z-10">
+                <h1 class="text-4xl md:text-5xl font-bold mb-6">Travel Comfortably Across Uganda</h1>
+                <p class="text-xl mb-8">Compare prices, choose your seat, and book instantly with trusted bus operators.</p>
+                
+                <div class="bg-white rounded-lg p-6 shadow-lg">
+                    <form id="searchForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="from">From</label>
+                            <div class="relative">
+                                <input class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-gray-100 text-gray-900" 
+                                       id="from" type="text" value="Kampala" readonly>
+                                <i data-feather="map-pin" class="absolute right-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="to">To</label>
+                            <div class="relative">
+                                <select class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary appearance-none bg-white text-gray-900" 
+                                       id="to">
+                                    <option value="">Select Destination</option>
+                                </select>
+                                <i data-feather="flag" class="absolute right-3 top-3 text-gray-400"></i>
+                            </div>
+                        </div>
+<div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="date">Date</label>
+                            <div class="relative">
+                                <input class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white text-gray-900" 
+                                       id="date" type="date">
+                                <button type="button" id="dateTrigger" class="absolute right-2 top-2 p-2 text-gray-500 hover:text-primary" aria-label="Open calendar">
+                                    <i data-feather="calendar"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex items-end">
+                            <button type="submit" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                                Search Buses
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="why-us" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-12">Why Choose EA Coach?</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="feature-card bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 overflow-hidden">
+                    <img src="http://static.photos/travel/500x300/booking" alt="Easy booking" class="w-full h-40 object-cover mb-4 rounded-lg">
+                    <div class="icon bg-primary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                        <i data-feather="clock" class="text-primary" width="28" height="28"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Easy Booking</h3>
+                    <p class="text-gray-600">Simple and quick booking process. Find and book your bus in minutes.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 overflow-hidden">
+                    <img src="http://static.photos/travel/500x300/network" alt="Wide network" class="w-full h-40 object-cover mb-4 rounded-lg">
+                    <div class="icon bg-secondary bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                        <i data-feather="globe" class="text-secondary" width="28" height="28"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Wide Network</h3>
+                    <p class="text-gray-600">Travel to any district in Uganda and East African countries.</p>
+                </div>
+                
+                <div class="feature-card bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition duration-300 overflow-hidden">
+                    <img src="http://static.photos/travel/500x300/trusted" alt="Trusted operators" class="w-full h-40 object-cover mb-4 rounded-lg">
+                    <div class="icon bg-green-500 bg-opacity-10 w-16 h-16 rounded-full flex items-center justify-center mb-4">
+                        <i data-feather="shield" class="text-green-500" width="28" height="28"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Trusted Operators</h3>
+                    <p class="text-gray-600">Travel with Uganda's most reliable and comfortable bus companies.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Routes -->
+        <section id="popular-routes" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Popular Routes</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="route-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <img src="http://static.photos/travel/640x360/1" alt="Kampala to Jinja" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">Kampala to Jinja</h3>
+                        <p class="text-gray-600 mb-3">From UGX 15,000</p>
+                        <button class="w-full bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="route-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <img src="http://static.photos/travel/640x360/2" alt="Kampala to Mbarara" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">Kampala to Mbarara</h3>
+                        <p class="text-gray-600 mb-3">From UGX 25,000</p>
+                        <button class="w-full bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="route-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <img src="http://static.photos/travel/640x360/3" alt="Kampala to Gulu" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">Kampala to Gulu</h3>
+                        <p class="text-gray-600 mb-3">From UGX 30,000</p>
+                        <button class="w-full bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="route-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition duration-300">
+                    <img src="http://static.photos/travel/640x360/4" alt="Kampala to Nairobi" class="w-full h-40 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-bold text-lg mb-2">Kampala to Nairobi</h3>
+                        <p class="text-gray-600 mb-3">From UGX 50,000</p>
+                        <a href="booking.html" class="w-full inline-block text-center bg-primary hover:bg-blue-700 text-white py-2 px-4 rounded transition duration-300">Book Now</a>
+                       
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About EA Coach -->
+        <section id="about" class="mb-16">
+            <div class="bg-white rounded-xl shadow p-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h2 class="text-3xl font-bold mb-4">About EA Coach</h2>
+                        <p class="text-gray-700 mb-4">EA Coach helps you compare, book, and manage bus trips across Uganda and East Africa. We aggregate trusted bus operators so you can easily find schedules, prices, and pick your preferred seats — all in one place.</p>
+                        <ul class="list-disc pl-5 text-gray-700 space-y-2">
+                            <li>Coverage across all Ugandan districts and East African countries</li>
+                            <li>Transparent pricing and real-time seat selection</li>
+                            <li>Secure booking flow with multiple payment options</li>
+                        </ul>
+                    </div>
+                    <div class="flex justify-center md:justify-end">
+                        <img src="http://static.photos/travel/640x360/5" alt="EA Coach buses" class="rounded-lg shadow-lg w-full max-w-md object-cover">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="how-it-works" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">How It Works</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow text-center overflow-hidden">
+                    <img src="http://static.photos/travel/400x300/search" alt="Search buses" class="w-full h-32 object-cover mb-4 rounded-lg">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-primary bg-opacity-10 flex items-center justify-center">
+                        <i data-feather="search" class="text-primary"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">1. Search</h3>
+                    <p class="text-gray-600">Choose destination and date to view available buses.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow text-center overflow-hidden">
+                    <img src="http://static.photos/travel/400x300/compare" alt="Compare options" class="w-full h-32 object-cover mb-4 rounded-lg">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-primary bg-opacity-10 flex items-center justify-center">
+                        <i data-feather="list" class="text-primary"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">2. Compare</h3>
+                    <p class="text-gray-600">Compare prices, times, and operators side by side.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow text-center overflow-hidden">
+                    <img src="http://static.photos/travel/400x300/seat" alt="Select seats" class="w-full h-32 object-cover mb-4 rounded-lg">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-primary bg-opacity-10 flex items-center justify-center">
+                        <i data-feather="grid" class="text-primary"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">3. Pick Seats</h3>
+                    <p class="text-gray-600">Select your preferred seats in an interactive layout.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow text-center overflow-hidden">
+                    <img src="http://static.photos/travel/400x300/payment" alt="Payment" class="w-full h-32 object-cover mb-4 rounded-lg">
+                    <div class="w-14 h-14 mx-auto mb-3 rounded-full bg-primary bg-opacity-10 flex items-center justify-center">
+                        <i data-feather="credit-card" class="text-primary"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">4. Pay & Go</h3>
+                    <p class="text-gray-600">Pay via Card, MTN MoMo, Airtel Money and you're set.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Bus Companies -->
+        <section id="companies" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Featured Bus Operators</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition">
+                    <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&h=400&fit=crop" alt="Nile Star Buses" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Nile Star Buses</h3>
+                        <p class="text-gray-600">Reliable routes across Uganda and cross-border.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition">
+                    <img src="../bus image/gateway.jpeg" alt="Gateway Bus Service" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Gateway Bus Service</h3>
+                        <p class="text-gray-600">Comfortable coaches with frequent departures.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition">
+                    <img src="../bus image/Jaguar.jpeg" alt="Jaguar Executive Coaches" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Jaguar Executive Coaches</h3>
+                        <p class="text-gray-600">Premium coaches for regional travel.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition">
+                    <img src="../bus image/trinity.jpeg" alt="Trinity Bus" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Trinity Bus</h3>
+                        <p class="text-gray-600">Affordable fares with wide coverage.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition">
+                    <img src="../bus image/KK new coach 2.jpg.opt1082x804o0,0s1082x804.jpg" alt="KK Coaches" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">KK Coaches</h3>
+                        <p class="text-gray-600">Comfort and punctuality on key routes.</p>
+                    </div>
+                </div>
+                <div class="bg-white rounded-xl shadow overflow-hidden hover:shadow-lg transition">
+                    <img src="../bus image/mash poa.jpeg" alt="Mash Poa Buses" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="font-bold text-lg mb-2">Mash Poa Buses</h3>
+                        <p class="text-gray-600">Trusted cross-border connections.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Image Gallery -->
+        <section id="gallery" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Travel Gallery</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <img src="http://static.photos/travel/400x400/scenic1" alt="Scenic route" class="w-full h-48 object-cover">
+                </div>
+                <div class="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <img src="http://static.photos/travel/400x400/scenic2" alt="Bus terminal" class="w-full h-48 object-cover">
+                </div>
+                <div class="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <img src="http://static.photos/travel/400x400/scenic3" alt="Comfortable seats" class="w-full h-48 object-cover">
+                </div>
+                <div class="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <img src="http://static.photos/travel/400x400/scenic4" alt="Modern bus" class="w-full h-48 object-cover">
+                </div>
+                <div class="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <img src="http://static.photos/travel/400x400/scenic5" alt="East Africa travel" class="w-full h-48 object-cover">
+                </div>
+                <div class="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <img src="http://static.photos/travel/400x400/scenic6" alt="Countryside" class="w-full h-48 object-cover">
+                </div>
+                <div class="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <img src="http://static.photos/travel/400x400/scenic7" alt="Bus journey" class="w-full h-48 object-cover">
+                </div>
+                <div class="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition">
+                    <img src="http://static.photos/travel/400x400/scenic8" alt="Travel experience" class="w-full h-48 object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQs -->
+        <section id="faqs" class="mb-16">
+            <h2 class="text-3xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+            <div class="max-w-3xl mx-auto space-y-4">
+                <details class="bg-white rounded-xl shadow p-4">
+                    <summary class="font-semibold cursor-pointer">Can I change my booking?</summary>
+                    <p class="text-gray-600 mt-2">Changes depend on the bus operator policy. Check your booking in the dashboard and contact support if needed.</p>
+                </details>
+                <details class="bg-white rounded-xl shadow p-4">
+                    <summary class="font-semibold cursor-pointer">Which payment methods are supported?</summary>
+                    <p class="text-gray-600 mt-2">You can pay using Debit/Credit Card, MTN MoMo, Airtel Mobile Money, and other local options.</p>
+                </details>
+                <details class="bg-white rounded-xl shadow p-4">
+                    <summary class="font-semibold cursor-pointer">Do I need to print my ticket?</summary>
+                    <p class="text-gray-600 mt-2">A digital confirmation is usually enough. Some operators may require a reference code at boarding.</p>
+                </details>
+            </div>
+        </section>
+
+        <!-- Contact CTA -->
+        <section id="contact" class="mb-8">
+            <div class="bg-gradient-to-r from-primary to-secondary rounded-xl p-8 text-white flex flex-col md:flex-row items-center justify-between relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10">
+                    <img src="http://static.photos/travel/1200x600/support" alt="Customer support" class="w-full h-full object-cover">
+                </div>
+                <div class="mb-4 md:mb-0 relative z-10">
+                    <h3 class="text-2xl font-bold mb-2">Need help with a booking?</h3>
+                    <p class="opacity-90">Our team is here to assist you with routes, payments, and more.</p>
+                </div>
+                <a href="booking.html" class="bg-white text-primary font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 relative z-10">Start Booking</a>
+            </div>
+        </section>
+
+        <!-- Search Results -->
+        <section id="search-results" class="mb-16 hidden">
+            <h2 class="text-3xl font-bold text-center mb-8">Available Buses</h2>
+            <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </section>
+
+        <!-- Booking Flow -->
+        <section id="booking" class="mb-16 hidden">
+            <h2 class="text-3xl font-bold text-center mb-8">Passenger Details</h2>
+            <form id="bookingForm" class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="fullName">Full Name</label>
+                        <input id="fullName" type="text" class="w-full p-3 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone Number</label>
+                        <input id="phone" type="tel" class="w-full p-3 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+                        <input id="email" type="email" class="w-full p-3 border rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="idType">ID Type</label>
+                        <select id="idType" class="w-full p-3 border rounded-lg">
+                            <option>National ID</option>
+                            <option>Passport</option>
+                            <option>Driving Permit</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-xl font-bold mb-3">Payment Method</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer">
+                            <input type="radio" name="payment" value="card" required>
+                            <span>Debit/Credit Card</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer">
+                            <input type="radio" name="payment" value="mtn">
+                            <span>MTN MoMo</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer">
+                            <input type="radio" name="payment" value="airtel">
+                            <span>Airtel Mobile Money</span>
+                        </label>
+                        <label class="flex items-center space-x-2 p-3 border rounded-lg cursor-pointer">
+                            <input type="radio" name="payment" value="other">
+                            <span>Other Methods</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button type="submit" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700">Confirm Booking</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Seat Selection Modal -->
+        <div id="seatModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-3xl p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold">Select Your Seat(s)</h3>
+                    <button id="closeSeatModal" class="text-gray-500 hover:text-gray-800">✕</button>
+                </div>
+                <div id="seatContainer" class="grid grid-cols-5 gap-3 mb-6"></div>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <span class="inline-block w-4 h-4 bg-green-500 rounded-sm"></span> Available
+                        <span class="inline-block w-4 h-4 bg-red-500 rounded-sm ml-4"></span> Booked
+                        <span class="inline-block w-4 h-4 bg-yellow-400 rounded-sm ml-4"></span> Selected
+                    </div>
+                    <button id="confirmSeatsBtn" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700">Confirm Seats</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Modals -->
+        <div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 id="authTitle" class="text-xl font-bold">Login</h3>
+                    <button id="authCloseBtn" class="text-gray-500 hover:text-gray-800">✕</button>
+                </div>
+                <form id="authForm" class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="authEmail">Email</label>
+                        <input id="authEmail" type="email" class="w-full p-3 border rounded-lg" required>
+                    </div>
+                    <div>
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="authPassword">Password</label>
+                        <input id="authPassword" type="password" class="w-full p-3 border rounded-lg" required>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <button id="authSubmitBtn" type="submit" class="bg-primary text-white px-4 py-2 rounded-lg">Login</button>
+                        <button id="toggleAuthMode" type="button" class="text-primary">Create an account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- User Dashboard -->
+        <section id="dashboard" class="mb-16 hidden">
+            <h2 class="text-3xl font-bold text-center mb-8">Your Bookings</h2>
+            <div id="bookingsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </section>
+
+        <!-- Admin Panel (Basic Structure) -->
+        <section id="admin" class="mb-16 hidden">
+            <h2 class="text-3xl font-bold text-center mb-8">Admin Panel</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow">
+                    <h3 class="font-bold mb-3">Add Mock Trip</h3>
+                    <form id="adminAddTripForm" class="space-y-3">
+                        <input id="adminCompany" type="text" placeholder="Company" class="w-full p-3 border rounded-lg">
+                        <input id="adminFrom" type="text" value="Kampala" class="w-full p-3 border rounded-lg" readonly>
+                        <select id="adminTo" class="w-full p-3 border rounded-lg"></select>
+                        <input id="adminDate" type="date" class="w-full p-3 border rounded-lg">
+                        <input id="adminTime" type="time" class="w-full p-3 border rounded-lg">
+                        <input id="adminPrice" type="number" placeholder="Price" class="w-full p-3 border rounded-lg">
+                        <button class="bg-primary text-white px-4 py-2 rounded-lg">Add Trip</button>
+                    </form>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow md:col-span-2">
+                    <h3 class="font-bold mb-3">Trips</h3>
+                    <div id="adminTripsContainer" class="space-y-3"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <custom-footer></custom-footer>
+
+    <script src="components/footer.js"></script>
+    <script src="script.js"></script>
+    <script>
+        feather.replace();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EA Coach - Book Your Trip</title>
+    <link rel="icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="shortcut icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#f59e0b'
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="script.js"></script>
+    <script defer src="components/footer.js"></script>
+    <style>
+        /* Avoid layout shift while Tailwind loads */
+        body { visibility: visible; }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => { feather.replace(); });
+    </script>
+    
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <img src="/icons8-bus-100.png" alt="" srcset="">
+                    <span class="text-xl font-bold text-primary">EA Coach</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html#home" class="text-gray-600 hover:text-primary transition">Home</a>
+                    <a href="routes.html" class="text-gray-600 hover:text-primary transition">Routes</a>
+                    <a href="index.html#dashboard" class="text-gray-600 hover:text-primary transition">Dashboard</a>
+                    <a href="login.html" class="text-gray-600 hover:text-primary transition">Login</a>
+                    <a href="signup.html" class="text-gray-600 hover:text-primary transition">Sign Up</a>
+                    <a href="booking.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white rounded-xl p-6 shadow mb-8">
+            <h1 class="text-2xl font-bold mb-4">Book your trip</h1>
+            <form id="searchForm" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="from">From</label>
+                    <div class="relative">
+                        <input class="w-full p-3 border rounded-lg bg-gray-100 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary" id="from" type="text" value="Kampala" readonly>
+                        <i data-feather="map-pin" class="absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="to">Destination</label>
+                    <div class="relative">
+                        <select class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary appearance-none bg-white text-gray-900" id="to">
+                            <option value="">Select Destination</option>
+                        </select>
+                        <i data-feather="flag" class="absolute right-3 top-3 text-gray-400"></i>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="date">Date</label>
+                    <div class="relative">
+                        <input class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white text-gray-900" id="date" type="date">
+                        <button type="button" id="dateTrigger" class="absolute right-2 top-2 p-2 text-gray-500 hover:text-primary" aria-label="Open calendar">
+                            <i data-feather="calendar"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex items-end">
+                    <button type="submit" class="w-full bg-primary hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300">Search Buses</button>
+                </div>
+            </form>
+        </section>
+
+        <section id="search-results" class="mb-16 hidden">
+            <h2 class="text-3xl font-bold text-center mb-8">Available Buses</h2>
+            <div id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </section>
+
+        <!-- Booking Summary Section -->
+        <section id="bookingSummary" class="mb-16 hidden">
+            <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow">
+                <h2 class="text-2xl font-bold mb-6">Booking Summary</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold text-lg mb-4">Trip Details</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Bus Company:</span>
+                                <span class="font-semibold" id="summaryCompany">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Route:</span>
+                                <span class="font-semibold" id="summaryRoute">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Travel Date:</span>
+                                <span class="font-semibold" id="summaryDate">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Departure Time:</span>
+                                <span class="font-semibold" id="summaryTime">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Selected Seats:</span>
+                                <span class="font-semibold" id="summarySeats">-</span>
+                            </div>
+                            <div class="flex justify-between pt-3 border-t">
+                                <span class="text-gray-600">Total Amount:</span>
+                                <span class="font-bold text-primary text-lg" id="summaryTotal">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-4">Seat Map Preview</h3>
+                        <div id="summarySeatPreview" class="grid grid-cols-5 gap-2 mb-4"></div>
+                        <p class="text-sm text-gray-600 mb-4">Selected seats are highlighted in yellow</p>
+                    </div>
+                </div>
+                <div class="mt-6 flex justify-end">
+                    <button id="continueToPassengerBtn" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700">Continue to Booking</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Passenger Details Form -->
+        <section id="passengerDetails" class="mb-16 hidden">
+            <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">1</span>
+                        <span class="font-semibold">Passenger Details</span>
+                    </div>
+                    <div class="flex items-center space-x-2 opacity-70">
+                        <span class="w-8 h-8 rounded-full border flex items-center justify-center">2</span>
+                        <span>Payment</span>
+                    </div>
+                </div>
+                <div class="mb-4 p-4 bg-gray-50 rounded-lg">
+                    <p class="text-sm text-gray-600 mb-2">Selected Seats:</p>
+                    <div id="passengerSeatsDisplay" class="flex flex-wrap gap-2"></div>
+                </div>
+                <form id="passengerForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="fullName">Full Name *</label>
+                            <input id="fullName" type="text" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="age">Age *</label>
+                            <input id="age" type="number" min="1" max="120" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="gender">Gender *</label>
+                            <select id="gender" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone Number *</label>
+                            <input id="phone" type="tel" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary" required>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Email</label>
+                            <input id="email" type="email" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="idType">ID Type</label>
+                            <select id="idType" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary">
+                                <option>National ID</option>
+                                <option>Passport</option>
+                                <option>Driving Permit</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700">Continue to Payment</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- Payment Page -->
+        <section id="paymentPage" class="mb-16 hidden">
+            <div class="max-w-4xl mx-auto bg-white p-6 rounded-xl shadow">
+                <h2 class="text-2xl font-bold mb-6">Payment</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="font-bold text-lg mb-4">Payment Summary</h3>
+                        <div class="space-y-3 p-4 bg-gray-50 rounded-lg">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Route:</span>
+                                <span class="font-semibold" id="paymentRoute">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Travel Date:</span>
+                                <span class="font-semibold" id="paymentDate">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Seat Numbers:</span>
+                                <span class="font-semibold" id="paymentSeats">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Price per Seat:</span>
+                                <span class="font-semibold" id="paymentPricePerSeat">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Number of Seats:</span>
+                                <span class="font-semibold" id="paymentSeatCount">-</span>
+                            </div>
+                            <div class="flex justify-between pt-3 border-t font-bold text-lg">
+                                <span>Total Amount:</span>
+                                <span class="text-primary" id="paymentTotal">-</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-4">Select Payment Method</h3>
+                        <form id="paymentForm" class="space-y-3">
+                            <label class="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="radio" name="paymentMethod" value="credit" required>
+                                <span class="font-medium">Credit/Debit Card</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="radio" name="paymentMethod" value="mtn" required>
+                                <span class="font-medium">MTN Mobile Money</span>
+                            </label>
+                            <label class="flex items-center space-x-3 p-4 border rounded-lg cursor-pointer hover:bg-gray-50 transition">
+                                <input type="radio" name="paymentMethod" value="airtel" required>
+                                <span class="font-medium">Airtel Mobile Money</span>
+                            </label>
+                        </form>
+                        
+                        <!-- Card Form -->
+                        <div id="cardForm" class="mt-6 space-y-4 hidden">
+                            <div>
+                                <label class="block text-sm text-gray-700 mb-1" for="cardNumber">Card Number</label>
+                                <input id="cardNumber" type="text" inputmode="numeric" placeholder="1234 5678 9012 3456" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm text-gray-700 mb-1" for="cardExpiry">Expiry Date (MM/YY)</label>
+                                    <input id="cardExpiry" type="text" placeholder="MM/YY" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary">
+                                </div>
+                                <div>
+                                    <label class="block text-sm text-gray-700 mb-1" for="cardCvv">CVV</label>
+                                    <input id="cardCvv" type="password" placeholder="123" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Mobile Money Form -->
+                        <div id="mobileForm" class="mt-6 space-y-2 hidden">
+                            <div>
+                                <label class="block text-sm text-gray-700 mb-1" for="mobileNumber">Phone Number</label>
+                                <input id="mobileNumber" type="tel" placeholder="e.g. 07XXXXXXXX" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary">
+                            </div>
+                            <p id="mobileHint" class="text-xs text-gray-500">You will receive a prompt on your phone to authorize this payment.</p>
+                        </div>
+                        
+                        <div class="mt-6">
+                            <button id="confirmPaymentBtn" class="w-full bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700">Confirm Payment & Complete Booking</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Booking Confirmation -->
+        <section id="bookingConfirmation" class="mb-16 hidden">
+            <div class="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow text-center">
+                <div class="w-16 h-16 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center">
+                    <i data-feather="check" class="text-green-600" width="32" height="32"></i>
+                </div>
+                <h2 class="text-2xl font-bold mb-4">Booking Confirmed!</h2>
+                <p class="text-gray-600 mb-6">Your booking has been successfully completed. You can view it in your dashboard.</p>
+                <div class="flex justify-center space-x-4">
+                    <a href="index.html#dashboard" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700">View Dashboard</a>
+                    <button onclick="window.location.reload()" class="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300">Book Another Trip</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Enhanced Seat Selection Modal -->
+    <div id="seatModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4 z-50 overflow-y-auto">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-4xl p-6 my-8">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <h3 class="text-xl font-bold">Select Your Seat(s)</h3>
+                    <p class="text-sm text-gray-600 mt-1" id="seatModalTripInfo">Choose your preferred seats</p>
+                </div>
+                <button id="closeSeatModal" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+            </div>
+            
+            <!-- Seat Legend -->
+            <div class="mb-6 flex flex-wrap items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                <div class="flex items-center space-x-2">
+                    <span class="inline-block w-6 h-6 bg-green-500 rounded border-2 border-green-600"></span>
+                    <span class="text-sm">Available</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="inline-block w-6 h-6 bg-red-500 rounded border-2 border-red-600"></span>
+                    <span class="text-sm">Taken</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="inline-block w-6 h-6 bg-yellow-400 rounded border-2 border-yellow-500"></span>
+                    <span class="text-sm">Selected</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="inline-block w-6 h-6 bg-blue-400 rounded border-2 border-blue-500"></span>
+                    <span class="text-sm">Hover Preview</span>
+                </div>
+            </div>
+
+            <!-- Visual Seat Map -->
+            <div class="mb-6">
+                <div class="text-center mb-4">
+                    <div class="inline-block bg-gray-200 px-4 py-2 rounded-lg">
+                        <span class="text-sm font-semibold">Driver</span>
+                    </div>
+                </div>
+                <div id="seatContainer" class="grid grid-cols-5 gap-2 mb-4"></div>
+                <div class="text-center">
+                    <div class="inline-block bg-gray-200 px-4 py-2 rounded-lg">
+                        <span class="text-sm font-semibold">Back of Bus</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selected Seats Summary -->
+            <div id="selectedSeatsSummary" class="mb-6 p-4 bg-primary bg-opacity-10 rounded-lg hidden">
+                <p class="text-sm font-semibold mb-2">Selected Seats:</p>
+                <div id="selectedSeatsList" class="flex flex-wrap gap-2"></div>
+                <p class="text-sm mt-2">
+                    <span id="selectedSeatsCount">0</span> seat(s) selected • 
+                    Total: <span id="selectedSeatsTotal" class="font-bold">UGX 0</span>
+                </p>
+            </div>
+
+            <div class="flex items-center justify-between">
+                <button id="clearSeatsBtn" class="text-gray-600 hover:text-gray-800 text-sm">Clear Selection</button>
+                <div class="flex space-x-3">
+                    <button id="closeSeatModalBtn" class="bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300">Cancel</button>
+                    <p class="text-sm text-gray-600 px-4 py-2">Click a seat to select and continue</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+            <div class="flex items-center justify-between mb-4">
+                <h3 id="authTitle" class="text-xl font-bold">Login</h3>
+                <button id="authCloseBtn" class="text-gray-500 hover:text-gray-800">✕</button>
+            </div>
+            <form id="authForm" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="authEmail">Email</label>
+                    <input id="authEmail" type="email" class="w-full p-3 border rounded-lg" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="authPassword">Password</label>
+                    <input id="authPassword" type="password" class="w-full p-3 border rounded-lg" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button id="authSubmitBtn" type="submit" class="bg-primary text-white px-4 py-2 rounded-lg">Login</button>
+                    <button id="toggleAuthMode" type="button" class="text-primary">Create an account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <custom-footer></custom-footer>
+
+</body>
+</html>
+
+
+

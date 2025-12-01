@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EA Coach - Payment</title>
+    <link rel="icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="shortcut icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#f59e0b'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navbar -->
+    <nav class="bg-white shadow">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <img src="/icons8-bus-100.png" alt="" srcset="">
+                    <span class="text-xl font-bold text-primary">EA Coach</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html#home" class="text-gray-600 hover:text-primary transition">Home</a>
+                    <a href="routes.html" class="text-gray-600 hover:text-primary transition">Routes</a>
+                    <a href="index.html#dashboard" class="text-gray-600 hover:text-primary transition">Dashboard</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-10">
+        <div class="max-w-3xl mx-auto">
+            <h1 class="text-3xl font-bold mb-6">Complete Your Payment</h1>
+
+            <!-- Payment Summary Card -->
+            <div class="bg-white rounded-xl shadow p-6 mb-8">
+                <h2 class="text-xl font-semibold mb-4">Payment Summary</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Route</span>
+                        <span id="sumRoute" class="font-semibold">-</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Date</span>
+                        <span id="sumDate" class="font-semibold">-</span>
+                    </div>
+                    <div class="flex justify-between md:col-span-2">
+                        <span class="text-gray-600">Seats</span>
+                        <span id="sumSeats" class="font-semibold">-</span>
+                    </div>
+                </div>
+                <div class="mt-6 p-4 bg-gray-50 rounded-lg flex items-center justify-between">
+                    <span class="text-lg font-semibold">Total</span>
+                    <span id="sumTotal" class="text-2xl font-extrabold text-primary">UGX 0</span>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="text-xl font-semibold mb-4">Select Payment Method</h2>
+
+                <div id="methodGroup" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <label class="border rounded-lg p-4 cursor-pointer hover:shadow transition flex items-center gap-3">
+                        <input type="radio" name="method" value="card" class="peer hidden">
+                        <span class="w-10 h-10 rounded bg-primary bg-opacity-10 text-primary flex items-center justify-center">💳</span>
+                        <span class="font-medium">Card</span>
+                    </label>
+                    <label class="border rounded-lg p-4 cursor-pointer hover:shadow transition flex items-center gap-3">
+                        <input type="radio" name="method" value="mtn" class="peer hidden">
+                        <span class="w-10 h-10 rounded bg-yellow-400 bg-opacity-20 text-yellow-600 flex items-center justify-center">📱</span>
+                        <span class="font-medium">MTN MoMo</span>
+                    </label>
+                    <label class="border rounded-lg p-4 cursor-pointer hover:shadow transition flex items-center gap-3">
+                        <input type="radio" name="method" value="airtel" class="peer hidden">
+                        <span class="w-10 h-10 rounded bg-red-500 bg-opacity-10 text-red-500 flex items-center justify-center">📱</span>
+                        <span class="font-medium">Airtel Money</span>
+                    </label>
+                </div>
+
+                <!-- Dynamic Forms -->
+                <div id="formCard" class="space-y-4 hidden">
+                    <div>
+                        <label class="block text-sm text-gray-700 mb-1" for="cardNumber">Card Number</label>
+                        <input id="cardNumber" type="text" inputmode="numeric" placeholder="1234 5678 9012 3456" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1" for="cardExpiry">Expiry</label>
+                            <input id="cardExpiry" type="text" placeholder="MM/YY" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div>
+                            <label class="block text-sm text-gray-700 mb-1" for="cardCvv">CVV</label>
+                            <input id="cardCvv" type="password" placeholder="123" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="formMobile" class="space-y-2 hidden">
+                    <div>
+                        <label class="block text-sm text-gray-700 mb-1" for="mobileNumber">Phone Number</label>
+                        <input id="mobileNumber" type="tel" placeholder="e.g. 07XXXXXXXX" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-primary">
+                    </div>
+                    <p id="mobileHint" class="text-xs text-gray-500">You will receive a prompt on your phone to authorize this payment.</p>
+                </div>
+
+                <button id="payBtn" class="mt-6 w-full bg-primary text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed">
+                    Pay
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // State
+        let isProcessing = false;
+        let paymentMethod = null;
+        let booking = null;
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            try {
+                const d = new Date(dateStr);
+                return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+            } catch { return dateStr; }
+        }
+
+        function init() {
+            // Parse URL params
+            const params = new URLSearchParams(window.location.search);
+            const from = params.get('from') || 'Kampala';
+            const to = params.get('to') || '-';
+            const date = params.get('date') || '';
+            const seats = (params.get('seats') || '').split(',').filter(Boolean);
+            const price = parseInt(params.get('price') || '0', 10) || 0;
+            const totalParam = parseInt(params.get('total') || '0', 10) || (price * seats.length);
+            const company = params.get('company') || 'EA Coach';
+            const busId = params.get('busId') || `bus-${Date.now()}`;
+            const departureTime = params.get('departureTime') || '08:00';
+
+            // Prepare booking object (pending)
+            booking = {
+                id: null, // set on success
+                userEmail: (JSON.parse(localStorage.getItem('ea_user') || 'null') || {}).email || null,
+                company,
+                from,
+                to,
+                date,
+                time: departureTime,
+                seats,
+                pricePerSeat: price,
+                totalAmount: totalParam,
+                busId,
+                status: 'pending',
+                payment: {
+                    method: null,
+                    status: 'pending',
+                    transactionId: null
+                },
+                bookingDate: new Date().toISOString()
+            };
+
+            // Populate summary
+            document.getElementById('sumRoute').textContent = `${from} → ${to}`;
+            document.getElementById('sumDate').textContent = formatDate(date);
+            document.getElementById('sumSeats').textContent = seats.length ? seats.join(', ') : '-';
+            document.getElementById('sumTotal').textContent = `UGX ${totalParam.toLocaleString()}`;
+            const payBtn = document.getElementById('payBtn');
+            payBtn.textContent = `Pay UGX ${totalParam.toLocaleString()}`;
+
+            // Payment method selection
+            document.querySelectorAll('#methodGroup input[name="method"]').forEach(input => {
+                input.addEventListener('change', onMethodChange);
+            });
+
+            // Pay button
+            payBtn.addEventListener('click', onPay);
+        }
+
+        function onMethodChange(e) {
+            paymentMethod = e.target.value; // 'card' | 'mtn' | 'airtel'
+            // Toggle forms
+            const card = document.getElementById('formCard');
+            const mobile = document.getElementById('formMobile');
+            const hint = document.getElementById('mobileHint');
+            if (paymentMethod === 'card') {
+                card.classList.remove('hidden');
+                mobile.classList.add('hidden');
+            } else {
+                card.classList.add('hidden');
+                mobile.classList.remove('hidden');
+                hint.textContent = paymentMethod === 'mtn' ? 'An MTN Mobile Money prompt will be sent to your phone.' : 'An Airtel Money prompt will be sent to your phone.';
+            }
+        }
+
+        function onPay() {
+            if (isProcessing) return;
+            if (!paymentMethod) { alert('Please select a payment method.'); return; }
+
+            // Basic validations
+            if (paymentMethod === 'card') {
+                const num = (document.getElementById('cardNumber').value || '').replace(/\s+/g, '');
+                const exp = document.getElementById('cardExpiry').value || '';
+                const cvv = document.getElementById('cardCvv').value || '';
+                if (num.length < 12 || !/^(\d{12,19})$/.test(num)) { alert('Enter a valid card number'); return; }
+                if (!/^\d{2}\/\d{2}$/.test(exp)) { alert('Enter a valid expiry in MM/YY'); return; }
+                if (!/^\d{3,4}$/.test(cvv)) { alert('Enter a valid CVV'); return; }
+            } else {
+                const msisdn = document.getElementById('mobileNumber').value || '';
+                if (!/^0\d{8,9}$/.test(msisdn)) { alert('Enter a valid phone number'); return; }
+            }
+
+            // Simulate processing
+            const btn = document.getElementById('payBtn');
+            isProcessing = true;
+            btn.disabled = true;
+            const originalText = btn.textContent;
+            btn.textContent = 'Processing...';
+
+            setTimeout(() => {
+                // Success
+                const bookingId = `BK${Date.now()}`;
+                booking.id = bookingId;
+                booking.status = 'confirmed';
+                booking.payment.method = paymentMethod;
+                booking.payment.status = 'completed';
+                booking.payment.transactionId = `TXN${Date.now()}`;
+
+                // Save to localStorage
+                const raw = localStorage.getItem('ea_bookings');
+                const list = raw ? JSON.parse(raw) : [];
+                list.push(booking);
+                localStorage.setItem('ea_bookings', JSON.stringify(list));
+
+                alert('Payment successful! Your booking is confirmed.');
+                window.location.href = '/Users/uy/Desktop/CAPSTONE/Bus/index.html';
+            }, 2000);
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
+
+

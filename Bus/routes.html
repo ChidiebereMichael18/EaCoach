@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EA Coach - Popular Routes</title>
+    <link rel="icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="shortcut icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#f59e0b'
+                    }
+                }
+            }
+        }
+    </script>
+    <script defer src="script.js"></script>
+    <script defer src="components/footer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => { feather.replace(); });
+    </script>
+</head>
+<body class="bg-gray-50">
+    <nav class="bg-white shadow">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <img src="/icons8-bus-100.png" alt="" srcset="">
+                    <span class="text-xl font-bold text-primary">EA Coach</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html#home" class="text-gray-600 hover:text-primary transition">Home</a>
+                    <a href="routes.html" class="text-primary font-semibold transition">Routes</a>
+                    <a href="index.html#dashboard" class="text-gray-600 hover:text-primary transition">Dashboard</a>
+                    <a href="login.html" class="text-gray-600 hover:text-primary transition">Login</a>
+                    <a href="signup.html" class="text-gray-600 hover:text-primary transition">Sign Up</a>
+                    <a href="booking.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Book Now</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">Popular Routes</h1>
+
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold mb-4">East African Countries</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Kenya</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Rwanda</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Tanzania</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Somalia</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Burundi</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Juba</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Congo (DRC)</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Ethiopia</a>
+            </div>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold mb-4">Around Uganda</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Entebbe</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Jinja</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Mbarara</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Arua</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Fort Portal</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Gulu</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Mbale</a>
+                <a href="booking.html" class="block bg-white p-5 rounded-xl shadow hover:shadow-lg transition">Kampala → Masaka</a>
+            </div>
+        </section>
+    </main>
+
+    <custom-footer></custom-footer>
+
+</body>
+</html>
+
+
