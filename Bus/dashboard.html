@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - EA Coach</title>
+    <link rel="icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="shortcut icon" type="image/png" href="shuttle-bus_18041583.png">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+    <script src="https://unpkg.com/feather-icons"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#f59e0b',
+                        success: '#10b981',
+                        warning: '#f59e0b',
+                        danger: '#ef4444'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .stat-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .booking-card {
+            border-left: 4px solid #2563eb;
+        }
+        .booking-card.upcoming {
+            border-left-color: #10b981;
+        }
+        .booking-card.completed {
+            border-left-color: #6b7280;
+        }
+        .booking-card.cancelled {
+            border-left-color: #ef4444;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center space-x-2">
+                    <span class="text-xl font-bold text-primary">EA Coach</span>
+                </a>
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="routes.html" class="text-gray-600 hover:text-primary transition">Routes</a>
+                    <a href="dashboard.html" class="text-gray-600 hover:text-primary transition font-semibold text-primary">Dashboard</a>
+                    <a href="booking.html" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Book Now</a>
+                    <div class="relative group" id="userDropdown">
+                        <button class="flex items-center space-x-2 text-gray-600 hover:text-primary">
+                            <img id="userAvatar" src="https://ui-avatars.com/api/?name=Guest&background=2563eb&color=fff" 
+                                 alt="User" 
+                                 class="w-8 h-8 rounded-full">
+                            <span id="userName">Guest</span>
+                            <i data-feather="chevron-down" class="w-4 h-4"></i>
+                        </button>
+                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border hidden group-hover:block z-50">
+                            <div class="border-t"></div>
+                            <a href="#" id="logoutBtn" class="block px-4 py-3 text-red-600 hover:bg-gray-100">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8">
+        <!-- Welcome Section -->
+        <div class="mb-8">
+            <h1 id="welcomeMessage" class="text-3xl font-bold text-gray-900">Welcome back!</h1>
+            <p class="text-gray-600 mt-2">Here's your travel overview and booking history</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stat-card bg-white p-6 rounded-xl shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Total Bookings</p>
+                        <p class="text-2xl font-bold mt-1" id="totalBookings">0</p>
+                    </div>
+                    <div class="p-3 bg-blue-50 rounded-lg">
+                        <i data-feather="book" class="text-primary"></i>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">All time bookings</p>
+            </div>
+
+            <div class="stat-card bg-white p-6 rounded-xl shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Upcoming Trips</p>
+                        <p class="text-2xl font-bold mt-1" id="upcomingTrips">0</p>
+                    </div>
+                    <div class="p-3 bg-green-50 rounded-lg">
+                        <i data-feather="clock" class="text-success"></i>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">Scheduled within 30 days</p>
+            </div>
+
+            <div class="stat-card bg-white p-6 rounded-xl shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Amount Spent</p>
+                        <p class="text-2xl font-bold mt-1" id="amountSpent">UGX 0</p>
+                    </div>
+                    <div class="p-3 bg-purple-50 rounded-lg">
+                        <i data-feather="dollar-sign" class="text-purple-600"></i>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">Total spending</p>
+            </div>
+
+            <div class="stat-card bg-white p-6 rounded-xl shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-600">Loyalty Points</p>
+                        <p class="text-2xl font-bold mt-1" id="loyaltyPoints">0</p>
+                    </div>
+                    <div class="p-3 bg-yellow-50 rounded-lg">
+                        <i data-feather="award" class="text-secondary"></i>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">Redeem for discounts</p>
+            </div>
+        </div>
+
+        <!-- Current/Upcoming Bookings -->
+        <div class="bg-white rounded-xl shadow mb-8">
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold">Current & Upcoming Bookings</h2>
+                    <button class="text-primary hover:text-blue-700 text-sm font-medium" onclick="viewAllBookings()">
+                        View All
+                    </button>
+                </div>
+            </div>
+            <div class="p-6">
+                <div id="upcomingBookingsContainer" class="space-y-4">
+                    <!-- Upcoming bookings will be loaded here -->
+                    <div id="noUpcomingBookings" class="text-center text-gray-500 py-8">
+                        <i data-feather="calendar" class="w-12 h-12 mx-auto mb-4 text-gray-300"></i>
+                        <p>No upcoming trips found</p>
+                        <p class="text-sm mt-2">Book your next adventure!</p>
+                        <a href="booking.html" class="inline-block mt-4 bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                            Book Now
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Booking History -->
+        <div class="bg-white rounded-xl shadow">
+            <div class="p-6 border-b">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold">Booking History</h2>
+                    <div class="flex space-x-2">
+                        <select id="timeFilter" class="border rounded-lg px-3 py-2 text-sm" onchange="filterBookings()">
+                            <option value="all">All Time</option>
+                            <option value="30">Last 30 Days</option>
+                            <option value="90">Last 3 Months</option>
+                            <option value="365">Last Year</option>
+                        </select>
+                        <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm" onclick="exportBookings()">
+                            Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="p-6">
+                <div class="overflow-x-auto">
+                    <table class="w-full" id="bookingHistoryTable">
+                        <thead>
+                            <tr class="text-left text-sm text-gray-600 border-b">
+                                <th class="pb-3 font-medium">Booking ID</th>
+                                <th class="pb-3 font-medium">Route</th>
+                                <th class="pb-3 font-medium">Date</th>
+                                <th class="pb-3 font-medium">Status</th>
+                                <th class="pb-3 font-medium">Seats</th>
+                                <th class="pb-3 font-medium">Amount</th>
+                                <th class="pb-3 font-medium">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingHistoryBody" class="divide-y">
+                            <!-- Booking history will be loaded here -->
+                            <tr id="noBookingsRow">
+                                <td colspan="7" class="py-12 text-center text-gray-500">
+                                    <i data-feather="book-open" class="w-12 h-12 mx-auto mb-4 text-gray-300"></i>
+                                    <p>No booking history yet</p>
+                                    <p class="text-sm mt-2">Start your journey with EA Coach</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="flex items-center justify-between mt-6 pt-6 border-t">
+                    <div class="text-sm text-gray-600" id="paginationInfo">
+                        Showing 0 bookings
+                    </div>
+                    <div class="flex space-x-2" id="paginationControls">
+                        <!-- Pagination will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-xl shadow">
+                <h3 class="font-bold mb-4">Need Help?</h3>
+                <p class="text-sm text-gray-600 mb-4">Having issues with your bookings or need assistance?</p>
+                <button class="w-full bg-gray-100 text-gray-700 px-4 py-3 rounded-lg hover:bg-gray-200" onclick="contactSupport()">
+                    Contact Support
+                </button>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow">
+                <h3 class="font-bold mb-4">Download E-Ticket</h3>
+                <p class="text-sm text-gray-600 mb-4">Download tickets for your upcoming trips</p>
+                <button class="w-full bg-primary text-white px-4 py-3 rounded-lg hover:bg-blue-700" onclick="downloadTickets()">
+                    Download All Tickets
+                </button>
+            </div>
+
+            <div class="bg-white p-6 rounded-xl shadow">
+                <h3 class="font-bold mb-4">Travel Again?</h3>
+                <p class="text-sm text-gray-600 mb-4">Book your next trip with special discounts</p>
+                <a href="booking.html" class="block w-full bg-secondary text-white px-4 py-3 rounded-lg hover:bg-orange-500 text-center">
+                    Book New Trip
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white mt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <a href="index.html" class="flex items-center space-x-2 mb-4">
+                        <span class="text-xl font-bold">EA Coach</span>
+                    </a>
+                    <p class="text-gray-400 text-sm">Your reliable partner for comfortable and safe bus travel across East Africa.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="index.html" class="text-gray-400 hover:text-white">Home</a></li>
+                        <li><a href="routes.html" class="text-gray-400 hover:text-white">Routes & Schedules</a></li>
+                        <li><a href="booking.html" class="text-gray-400 hover:text-white">Book Tickets</a></li>
+                        <li><a href="dashboard.html" class="text-gray-400 hover:text-white">My Dashboard</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white">Help Center</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">FAQ</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Contact Info</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li class="flex items-center space-x-2">
+                            <i data-feather="phone" class="w-4 h-4"></i>
+                            <span>+256 700 123 456</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-feather="mail" class="w-4 h-4"></i>
+                            <span>support@eacoach.com</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i data-feather="map-pin" class="w-4 h-4"></i>
+                            <span>Kampala, Uganda</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+                <p>© 2024 EA Coach. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dashboard Data Management
+        const dashboardState = {
+            bookings: [],
+            currentPage: 1,
+            pageSize: 5,
+            timeFilter: 'all'
+        };
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            feather.replace();
+            loadUserData();
+            loadBookings();
+            updateStats();
+            renderUpcomingBookings();
+            renderBookingHistory();
+            setupEventListeners();
+        });
+
+        // Load user data from localStorage
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('ea_user')) || { email: 'Guest' };
+            const userName = userData.name || userData.email.split('@')[0] || 'Guest';
+            
+            // Update user display
+            document.getElementById('userName').textContent = userName;
+            document.getElementById('welcomeMessage').textContent = `Welcome back, ${userName}!`;
+            
+            // Update avatar
+            const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(userName)}&background=2563eb&color=fff`;
+            document.getElementById('userAvatar').src = avatarUrl;
+        }
+
+        // Load bookings from localStorage
+        function loadBookings() {
+            // Try to get bookings from multiple sources to ensure we get real data
+            const bookings1 = JSON.parse(localStorage.getItem('ea_bookings')) || [];
+            const bookings2 = JSON.parse(localStorage.getItem('userBookings')) || [];
+            
+            // Combine and deduplicate bookings
+            const allBookings = [...bookings1, ...bookings2];
+            const uniqueBookings = [];
+            const seenIds = new Set();
+            
+            allBookings.forEach(booking => {
+                const id = booking.id || booking.bookingId || `${booking.company}-${booking.date}-${booking.seats}`;
+                if (!seenIds.has(id)) {
+                    seenIds.add(id);
+                    uniqueBookings.push({
+                        ...booking,
+                        id: id,
+                        status: booking.status || getBookingStatus(booking.date),
+                        amount: booking.amount || booking.totalAmount || (booking.price || 0) * (booking.seats ? booking.seats.length : 1)
+                    });
+                }
+            });
+            
+            // Sort by date (most recent first)
+            dashboardState.bookings = uniqueBookings.sort((a, b) => {
+                const dateA = new Date(a.date || a.travelDate);
+                const dateB = new Date(b.date || b.travelDate);
+                return dateB - dateA;
+            });
+        }
+
+        // Determine booking status based on date
+        function getBookingStatus(bookingDate) {
+            if (!bookingDate) return 'completed';
+            
+            const today = new Date();
+            const travelDate = new Date(bookingDate);
+            const diffTime = travelDate - today;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays > 0) return 'upcoming';
+            if (diffDays === 0) return 'today';
+            return 'completed';
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalBookings = dashboardState.bookings.length;
+            const today = new Date();
+            const thirtyDaysFromNow = new Date(today);
+            thirtyDaysFromNow.setDate(today.getDate() + 30);
+            
+            const upcomingTrips = dashboardState.bookings.filter(booking => {
+                if (!booking.date) return false;
+                const travelDate = new Date(booking.date);
+                return travelDate >= today && travelDate <= thirtyDaysFromNow && booking.status === 'upcoming';
+            }).length;
+            
+            const amountSpent = dashboardState.bookings.reduce((total, booking) => {
+                return total + (booking.amount || 0);
+            }, 0);
+            
+            // Calculate loyalty points (100 points per UGX 10,000 spent)
+            const loyaltyPoints = Math.floor(amountSpent / 10000) * 100;
+            
+            // Update DOM
+            document.getElementById('totalBookings').textContent = totalBookings;
+            document.getElementById('upcomingTrips').textContent = upcomingTrips;
+            document.getElementById('amountSpent').textContent = `UGX ${amountSpent.toLocaleString()}`;
+            document.getElementById('loyaltyPoints').textContent = loyaltyPoints.toLocaleString();
+        }
+
+        // Render upcoming bookings
+        function renderUpcomingBookings() {
+            const container = document.getElementById('upcomingBookingsContainer');
+            const noBookingsDiv = document.getElementById('noUpcomingBookings');
+            
+            const today = new Date();
+            const upcomingBookings = dashboardState.bookings.filter(booking => 
+                booking.status === 'upcoming' || (booking.date && new Date(booking.date) >= today)
+            ).slice(0, 5); // Show only first 5 upcoming bookings
+            
+            if (upcomingBookings.length === 0) {
+                noBookingsDiv.classList.remove('hidden');
+                container.innerHTML = '';
+                container.appendChild(noBookingsDiv);
+                return;
+            }
+            
+            noBookingsDiv.classList.add('hidden');
+            container.innerHTML = '';
+            
+            upcomingBookings.forEach(booking => {
+                const bookingCard = createBookingCard(booking);
+                container.appendChild(bookingCard);
+            });
+        }
+
+        // Create booking card element
+        function createBookingCard(booking) {
+            const card = document.createElement('div');
+            card.className = `booking-card ${booking.status} bg-white p-5 rounded-lg border hover:shadow-md transition`;
+            
+            // Format date
+            const bookingDate = booking.date ? new Date(booking.date).toLocaleDateString('en-US', {
+                weekday: 'short',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            }) : 'Date not specified';
+            
+            // Get status badge
+            const statusBadge = getStatusBadge(booking.status);
+            
+            card.innerHTML = `
+                <div class="flex flex-col md:flex-row md:items-center justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center space-x-3 mb-3">
+                            ${statusBadge}
+                            <span class="text-sm text-gray-600">${booking.id}</span>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <p class="text-sm text-gray-600">Route</p>
+                                <p class="font-semibold">${booking.from || 'Kampala'} → ${booking.to || 'Unknown'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Travel Date</p>
+                                <p class="font-semibold">${bookingDate}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Departure Time</p>
+                                <p class="font-semibold">${booking.time || '08:00 AM'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Bus Company</p>
+                                <p class="font-semibold">${booking.company || 'EA Coach'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Seats</p>
+                                <p class="font-semibold">${Array.isArray(booking.seats) ? booking.seats.join(', ') : 'N/A'}</p>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-600">Total Paid</p>
+                                <p class="font-semibold text-green-600">UGX ${(booking.amount || 0).toLocaleString()}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 md:mt-0 md:ml-6 flex space-x-2">
+                        <button class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-blue-700 text-sm" onclick="viewBookingDetails('${booking.id}')">
+                            View Details
+                        </button>
+                        <button class="px-4 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 text-sm" onclick="cancelBooking('${booking.id}')" ${booking.status !== 'upcoming' ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        // Get status badge HTML
+        function getStatusBadge(status) {
+            const badges = {
+                'upcoming': '<span class="px-3 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full">UPCOMING</span>',
+                'completed': '<span class="px-3 py-1 bg-gray-100 text-gray-800 text-xs font-medium rounded-full">COMPLETED</span>',
+                'cancelled': '<span class="px-3 py-1 bg-red-100 text-red-800 text-xs font-medium rounded-full">CANCELLED</span>',
+                'today': '<span class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">TODAY</span>'
+            };
+            return badges[status] || badges.completed;
+        }
+
+        // Render booking history table
+        function renderBookingHistory() {
+            const tbody = document.getElementById('bookingHistoryBody');
+            const noBookingsRow = document.getElementById('noBookingsRow');
+            
+            // Filter bookings based on time filter
+            let filteredBookings = [...dashboardState.bookings];
+            if (dashboardState.timeFilter !== 'all') {
+                const days = parseInt(dashboardState.timeFilter);
+                const cutoffDate = new Date();
+                cutoffDate.setDate(cutoffDate.getDate() - days);
+                
+                filteredBookings = filteredBookings.filter(booking => {
+                    if (!booking.date) return false;
+                    const bookingDate = new Date(booking.date);
+                    return bookingDate >= cutoffDate;
+                });
+            }
+            
+            // Paginate
+            const startIndex = (dashboardState.currentPage - 1) * dashboardState.pageSize;
+            const endIndex = startIndex + dashboardState.pageSize;
+            const paginatedBookings = filteredBookings.slice(startIndex, endIndex);
+            
+            // Clear table
+            tbody.innerHTML = '';
+            
+            if (paginatedBookings.length === 0) {
+                tbody.appendChild(noBookingsRow);
+                noBookingsRow.classList.remove('hidden');
+            } else {
+                noBookingsRow.classList.add('hidden');
+                
+                paginatedBookings.forEach(booking => {
+                    const row = createBookingRow(booking);
+                    tbody.appendChild(row);
+                });
+            }
+            
+            // Update pagination info
+            updatePaginationInfo(filteredBookings.length);
+            renderPaginationControls(filteredBookings.length);
+        }
+
+        // Create booking table row
+        function createBookingRow(booking) {
+            const row = document.createElement('tr');
+            
+            // Format booking date
+            const bookingDate = booking.date ? new Date(booking.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            }) : 'N/A';
+            
+            // Format booking ID date
+            const bookingIdDate = booking.date ? new Date(booking.date).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            }) : 'Unknown date';
+            
+            row.innerHTML = `
+                <td class="py-4">
+                    <div class="font-medium">${booking.id}</div>
+                    <div class="text-xs text-gray-500">${bookingIdDate}</div>
+                </td>
+                <td class="py-4">
+                    <div class="font-medium">${booking.from || 'Kampala'} → ${booking.to || 'Unknown'}</div>
+                    <div class="text-xs text-gray-500">${booking.company || 'EA Coach'}</div>
+                </td>
+                <td class="py-4">${bookingDate}</td>
+                <td class="py-4">
+                    ${getStatusBadge(booking.status)}
+                </td>
+                <td class="py-4">${Array.isArray(booking.seats) ? booking.seats.join(', ') : 'N/A'}</td>
+                <td class="py-4 font-medium ${booking.status === 'cancelled' ? 'text-red-600' : ''}">
+                    ${booking.status === 'cancelled' ? '-' : ''}UGX ${(booking.amount || 0).toLocaleString()}
+                </td>
+                <td class="py-4">
+                    <button class="text-primary hover:text-blue-700 text-sm" onclick="viewBookingDetails('${booking.id}')">View</button>
+                </td>
+            `;
+            
+            return row;
+        }
+
+        // Update pagination info
+        function updatePaginationInfo(totalBookings) {
+            const startIndex = (dashboardState.currentPage - 1) * dashboardState.pageSize + 1;
+            const endIndex = Math.min(startIndex + dashboardState.pageSize - 1, totalBookings);
+            
+            document.getElementById('paginationInfo').textContent = 
+                totalBookings === 0 ? 'Showing 0 bookings' : 
+                `Showing ${startIndex} to ${endIndex} of ${totalBookings} bookings`;
+        }
+
+        // Render pagination controls
+        function renderPaginationControls(totalBookings) {
+            const container = document.getElementById('paginationControls');
+            const totalPages = Math.ceil(totalBookings / dashboardState.pageSize);
+            
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            
+            // Previous button
+            if (dashboardState.currentPage > 1) {
+                html += `<button class="px-3 py-2 border rounded-lg hover:bg-gray-50" onclick="changePage(${dashboardState.currentPage - 1})">Previous</button>`;
+            } else {
+                html += `<button class="px-3 py-2 border rounded-lg hover:bg-gray-50 disabled:opacity-50" disabled>Previous</button>`;
+            }
+            
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === dashboardState.currentPage) {
+                    html += `<button class="px-3 py-2 border rounded-lg bg-primary text-white">${i}</button>`;
+                } else {
+                    html += `<button class="px-3 py-2 border rounded-lg hover:bg-gray-50" onclick="changePage(${i})">${i}</button>`;
+                }
+            }
+            
+            // Next button
+            if (dashboardState.currentPage < totalPages) {
+                html += `<button class="px-3 py-2 border rounded-lg hover:bg-gray-50" onclick="changePage(${dashboardState.currentPage + 1})">Next</button>`;
+            } else {
+                html += `<button class="px-3 py-2 border rounded-lg hover:bg-gray-50 disabled:opacity-50" disabled>Next</button>`;
+            }
+            
+            container.innerHTML = html;
+        }
+
+        // Filter bookings by time
+        function filterBookings() {
+            dashboardState.timeFilter = document.getElementById('timeFilter').value;
+            dashboardState.currentPage = 1;
+            renderBookingHistory();
+        }
+
+        // Change page
+        function changePage(page) {
+            dashboardState.currentPage = page;
+            renderBookingHistory();
+            window.scrollTo({ top: document.getElementById('bookingHistoryTable').offsetTop - 100, behavior: 'smooth' });
+        }
+
+        // View all bookings
+        function viewAllBookings() {
+            dashboardState.pageSize = 50;
+            dashboardState.currentPage = 1;
+            renderBookingHistory();
+        }
+
+        // View booking details
+        function viewBookingDetails(bookingId) {
+            const booking = dashboardState.bookings.find(b => b.id === bookingId);
+            if (booking) {
+                alert(`Booking Details:\n\n` +
+                      `ID: ${booking.id}\n` +
+                      `Route: ${booking.from || 'Kampala'} → ${booking.to || 'Unknown'}\n` +
+                      `Date: ${booking.date || 'N/A'}\n` +
+                      `Time: ${booking.time || 'N/A'}\n` +
+                      `Company: ${booking.company || 'N/A'}\n` +
+                      `Seats: ${Array.isArray(booking.seats) ? booking.seats.join(', ') : 'N/A'}\n` +
+                      `Amount: UGX ${(booking.amount || 0).toLocaleString()}\n` +
+                      `Status: ${booking.status || 'N/A'}\n` +
+                      `Passenger: ${booking.passengerName || booking.fullName || 'N/A'}\n` +
+                      `Phone: ${booking.phone || 'N/A'}`);
+            }
+        }
+
+        // Cancel booking
+        function cancelBooking(bookingId) {
+            if (!confirm('Are you sure you want to cancel this booking? This action cannot be undone.')) {
+                return;
+            }
+            
+            const bookingIndex = dashboardState.bookings.findIndex(b => b.id === bookingId);
+            if (bookingIndex !== -1) {
+                dashboardState.bookings[bookingIndex].status = 'cancelled';
+                
+                // Update localStorage
+                const userEmail = JSON.parse(localStorage.getItem('ea_user'))?.email;
+                if (userEmail) {
+                    // Update in ea_bookings
+                    const eaBookings = JSON.parse(localStorage.getItem('ea_bookings')) || [];
+                    const updatedEaBookings = eaBookings.map(b => 
+                        b.id === bookingId ? {...b, status: 'cancelled'} : b
+                    );
+                    localStorage.setItem('ea_bookings', JSON.stringify(updatedEaBookings));
+                    
+                    // Update in userBookings
+                    const userBookings = JSON.parse(localStorage.getItem('userBookings')) || [];
+                    const updatedUserBookings = userBookings.map(b => 
+                        b.id === bookingId ? {...b, status: 'cancelled'} : b
+                    );
+                    localStorage.setItem('userBookings', JSON.stringify(updatedUserBookings));
+                }
+                
+                updateStats();
+                renderUpcomingBookings();
+                renderBookingHistory();
+                
+                alert('Booking cancelled successfully.');
+            }
+        }
+
+        // Export bookings
+        function exportBookings() {
+            const csvContent = "data:text/csv;charset=utf-8," 
+                + ["Booking ID,Route,Date,Status,Seats,Amount,Company"]
+                .concat(dashboardState.bookings.map(booking => 
+                    `"${booking.id}","${booking.from || 'Kampala'} → ${booking.to || 'Unknown'}","${booking.date || ''}","${booking.status || ''}","${Array.isArray(booking.seats) ? booking.seats.join(',') : ''}","${booking.amount || 0}","${booking.company || ''}"`
+                ))
+                .join("\n");
+            
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "ea_coach_bookings.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Contact support
+        function contactSupport() {
+            window.location.href = "mailto:support@eacoach.com?subject=EA%20Coach%20Support%20Request";
+        }
+
+        // Download tickets
+        function downloadTickets() {
+            const upcomingBookings = dashboardState.bookings.filter(booking => 
+                booking.status === 'upcoming' || (booking.date && new Date(booking.date) >= new Date())
+            );
+            
+            if (upcomingBookings.length === 0) {
+                alert('No upcoming trips found to download tickets for.');
+                return;
+            }
+            
+            // In a real app, this would generate PDF tickets
+            // For now, we'll just show an alert
+            alert(`Downloading ${upcomingBookings.length} e-ticket(s)...\n\n` +
+                  `In a production environment, this would generate PDF tickets for each booking.`);
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    localStorage.removeItem('ea_user');
+                    window.location.href = 'index.html';
+                }
+            });
+            
+            // User dropdown for mobile
+            const userDropdown = document.getElementById('userDropdown');
+            userDropdown.addEventListener('click', function(e) {
+                if (window.innerWidth < 768) {
+                    const dropdown = this.querySelector('.hidden');
+                    if (dropdown) {
+                        dropdown.classList.toggle('hidden');
+                    }
+                }
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!userDropdown.contains(e.target)) {
+                    const dropdown = userDropdown.querySelector('.hidden');
+                    if (dropdown && !dropdown.classList.contains('hidden')) {
+                        dropdown.classList.add('hidden');
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

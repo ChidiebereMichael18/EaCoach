@@ -294,7 +294,7 @@
                 <h2 class="text-2xl font-bold mb-4">Booking Confirmed!</h2>
                 <p class="text-gray-600 mb-6">Your booking has been successfully completed. You can view it in your dashboard.</p>
                 <div class="flex justify-center space-x-4">
-                    <a href="index.html#dashboard" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700">View Dashboard</a>
+                    <a href="dashboard.html" class="bg-primary text-white px-6 py-3 rounded-lg hover:bg-blue-700">View Dashboard</a>
                     <button onclick="window.location.reload()" class="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg hover:bg-gray-300">Book Another Trip</button>
                 </div>
             </div>
@@ -392,6 +392,69 @@
     </div>
 
     <custom-footer></custom-footer>
+    <script>
+        // Update the confirmPaymentBtn event handler in booking.html:
+document.getElementById('confirmPaymentBtn').addEventListener('click', function() {
+    // ... existing payment validation logic ...
+    
+    // After successful payment validation:
+    showBookingConfirmation();
+    
+    // Get current user
+    const currentUser = JSON.parse(localStorage.getItem('ea_user')) || { email: 'guest' };
+    
+    // Get booking data
+    const trip = appState.selectedTrip;
+    const passengerData = window.passengerData || {};
+    
+    // Create booking object
+    const bookingData = {
+        id: 'BK-' + Date.now(),
+        bookingId: 'BK-' + Date.now(),
+        from: trip?.from || 'Kampala',
+        to: trip?.to || '',
+        date: trip?.date || new Date().toISOString().slice(0, 10),
+        time: trip?.time || '08:00 AM',
+        company: trip?.company || 'EA Coach',
+        seats: appState.selectedSeats || [],
+        amount: (trip?.price || 0) * (appState.selectedSeats?.length || 1),
+        price: trip?.price || 0,
+        status: 'upcoming',
+        bookingDate: new Date().toISOString(),
+        userEmail: currentUser.email,
+        // Passenger info from passenger form
+        passengerName: passengerData.fullName,
+        phone: passengerData.phone,
+        email: passengerData.email || currentUser.email,
+        age: passengerData.age,
+        gender: passengerData.gender,
+        idType: passengerData.idType,
+        // Payment info
+        paymentMethod: document.querySelector('input[name="paymentMethod"]:checked')?.value || 'unknown'
+    };
+    
+    // Store in both localStorage locations for compatibility
+    // 1. Store in ea_bookings (used by your existing system)
+    let eaBookings = JSON.parse(localStorage.getItem('ea_bookings')) || [];
+    eaBookings.push(bookingData);
+    localStorage.setItem('ea_bookings', JSON.stringify(eaBookings));
+    
+    // 2. Store in userBookings (used by dashboard)
+    let userBookings = JSON.parse(localStorage.getItem('userBookings')) || [];
+    userBookings.push(bookingData);
+    localStorage.setItem('userBookings', JSON.stringify(userBookings));
+    
+    // Show confirmation and redirect
+    setTimeout(() => {
+        window.location.href = 'dashboard.html';
+    }, 2000);
+});
+
+function showBookingConfirmation() {
+    document.getElementById('paymentPage').classList.add('hidden');
+    document.getElementById('bookingConfirmation').classList.remove('hidden');
+}
+    </script>
 
 </body>
 </html>
