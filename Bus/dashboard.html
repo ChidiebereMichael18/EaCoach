@@ -491,7 +491,8 @@
     }
 
     // Load bookings from localStorage - SIMPLIFIED AND GUARANTEED TO WORK
-  function loadBookings() {
+  // Load bookings from localStorage - FIXED TO REMOVE DUPLICATES
+function loadBookings() {
     console.log('📂 Loading bookings from localStorage...');
     
     // Get current logged-in user
@@ -590,11 +591,24 @@
         return normalizedBooking;
     });
     
-    // Store only user's bookings
-    dashboardState.bookings = processedBookings;
+    // REMOVE DUPLICATES based on booking ID
+    const uniqueBookings = [];
+    const seenIds = new Set();
     
-    console.log('🎯 Dashboard state bookings:', dashboardState.bookings);
-    console.log(`✅ Loaded ${dashboardState.bookings.length} bookings for user ${userEmail}`);
+    processedBookings.forEach(booking => {
+        if (!seenIds.has(booking.id)) {
+            seenIds.add(booking.id);
+            uniqueBookings.push(booking);
+        } else {
+            console.log(`🔄 Removing duplicate booking: ${booking.id}`);
+        }
+    });
+    
+    // Store only unique user's bookings
+    dashboardState.bookings = uniqueBookings;
+    
+    console.log('🎯 Dashboard state bookings (unique):', dashboardState.bookings);
+    console.log(`✅ Loaded ${dashboardState.bookings.length} unique bookings for user ${userEmail}`);
 }
 
     // Determine booking status based on date
